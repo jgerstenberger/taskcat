@@ -1,3 +1,4 @@
+
 // locations to search for config files that get merged into the main config;
 // config files can be ConfigSlurper scripts, Java properties files, or classes
 // in the classpath in ConfigSlurper format
@@ -88,4 +89,26 @@ log4j = {
            'org.springframework',
            'org.hibernate',
            'net.sf.ehcache.hibernate'
+		   
+	debug 'org.springframework.security',
+			'org.openid4java'
 }
+
+// Added by the Spring Security Core plugin:
+grails.plugins.springsecurity.userLookup.userDomainClassName = 'taskcat.User'
+grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'taskcat.UserRole'
+grails.plugins.springsecurity.authority.className = 'taskcat.Role'
+grails.plugins.springsecurity.rememberMe.persistent = true
+grails.plugins.springsecurity.rememberMe.persistentToken.domainClassName = 'taskcat.PersistentLogin'
+
+grails.plugins.springsecurity.openid.domainClass = 'taskcat.OpenID'
+
+grails.plugins.springsecurity.openid.registration.requiredAttributes = [
+	axContactEmail: 'http://axschema.org/contact/email',
+	axNamePersonFirst: 'http://axschema.org/namePerson/first',
+	axNamePersonLast: 'http://axschema.org/namePerson/last']
+
+grails.plugins.springsecurity.openid.registration.optionalAttributes = []
+
+grails.plugins.springsecurity.auth.loginFormUrl = '/j_spring_openid_security_check?openid_identifier=' +
+			URLEncoder.encode('https://www.google.com/accounts/o8/id', 'UTF-8')
