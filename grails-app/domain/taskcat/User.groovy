@@ -12,7 +12,7 @@ class User {
 	boolean accountLocked
 	boolean passwordExpired
 	
-	static hasMany = [openIds: OpenID, tasks: Task]
+	static hasMany = [openIds: OpenID, tasks: Task, dailyTasks: DailyTask]
 
 	static constraints = {
 		username blank: false, unique: true

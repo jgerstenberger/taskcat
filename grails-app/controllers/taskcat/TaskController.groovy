@@ -6,7 +6,7 @@ class TaskController {
 	
 	def save() {
 		Task task = new Task(params)
-		User.get(params.user_id).addToTasks(task)
+		User.get(params.user_id).addToTasks(task).save()
 		render 'ok'
 	}
 }
