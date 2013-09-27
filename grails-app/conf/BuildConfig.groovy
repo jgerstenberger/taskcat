@@ -65,5 +65,6 @@ grails.project.dependency.resolution = {
 		compile ':spring-security-core:1.2.7.3'
 		compile ':spring-security-openid:1.0.4'
 		compile ":joda-time:1.4"
+		compile ":jquery-ui:1.8.24"
     }
 }

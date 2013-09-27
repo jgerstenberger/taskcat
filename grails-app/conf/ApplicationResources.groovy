@@ -1,5 +1,6 @@
 modules = {
-    application {
-        resource url:'js/application.js'
+    taskCreate {
+		dependsOn 'jquery-ui'
+        resource url:'js/taskCreate.js'
     }
 }

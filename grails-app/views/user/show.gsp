@@ -1,13 +1,5 @@
 <html>
-	<g:form controller="task" action="save">
-		<g:textField name="description"/>
-		<g:hiddenField name="user_id" value="$user.id"/>
-		<g:submitButton name="Add Task"/>
-	</g:form>
+	<g:render template="/task/create"/>
 	
-	<ul>
-		<g:each var="task" in="${user.tasks}">
-			<li>${task.description}</li>
-		</g:each>
-	</ul>
+	<g:render template="/task/index" model="[tasks: user.tasks]"/>
 </html>
