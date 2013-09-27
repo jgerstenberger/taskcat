@@ -111,6 +111,5 @@ grails.plugins.springsecurity.openid.registration.requiredAttributes = [
 grails.plugins.springsecurity.openid.registration.optionalAttributes = []
 
 grails.plugins.springsecurity.auth.loginFormUrl = 
-	"/j_spring_openid_security_check?${grails.plugins.springsecurity.rememberMe.parameter}=1" + 
-	"&${grails.plugins.springsecurity.openid.claimedIdentityFieldName}=" +
-	URLEncoder.encode('https://www.google.com/accounts/o8/id', 'UTF-8')
+	"/j_spring_openid_security_check?_spring_security_remember_me=1" + 
+	"&openid_identifier=" +	URLEncoder.encode('https://www.google.com/accounts/o8/id', 'UTF-8')
