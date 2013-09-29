@@ -1,3 +1,3 @@
 $(function() {
-	$("#dueDate").datepicker();
+	$("#dueDate").datepicker({dateFormat: 'm/d/y'});
 });

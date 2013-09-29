@@ -1,5 +1,6 @@
 package taskcat
 
+import org.jadira.usertype.dateandtime.joda.PersistentLocalDate;
 import org.joda.time.LocalDate;
 
 enum TaskStatus {
@@ -15,6 +16,9 @@ class Task {
 	
     static constraints = {
 		dailyTask(nullable: true)
-		
     }
+	
+	static mapping = {
+		dueDate type:PersistentLocalDate
+	}
 }

@@ -12,7 +12,10 @@ class UserController {
 	def show() {
 		def task = new Task(userId: params.id)
 		task.user = User.get(params.id)
-		print "${task.user}/${task.user.id}/${task.userId}"
-		[user: User.get(params.id), task: task]
+
+		def dailyTask = new DailyTask(userId: params.id)
+		dailyTask.user = User.get(params.id)
+
+		[user: User.get(params.id), task: task, dailyTask: dailyTask]
 	}
 }
