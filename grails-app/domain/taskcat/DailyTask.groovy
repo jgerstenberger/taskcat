@@ -1,6 +1,7 @@
 package taskcat
 
 import org.joda.time.LocalDate
+import org.jadira.usertype.dateandtime.joda.PersistentLocalDate;
 
 class DailyTask {
 	String description = ''
@@ -12,4 +13,8 @@ class DailyTask {
     static constraints = {
 		instancesThru(nullable: true)
     }
+	
+	static mapping = {
+//		instancesThru type:PersistentLocalDate
+	}
 }

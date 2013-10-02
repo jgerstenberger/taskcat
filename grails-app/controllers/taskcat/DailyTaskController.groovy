@@ -8,6 +8,6 @@ class DailyTaskController {
 		DailyTask dTask = new DailyTask(params)
 		dTask.user = User.get(params.userId)
 		dTask.save()
-		render 'ok'
+		redirect uri: '/'
 	}
 }

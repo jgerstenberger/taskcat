@@ -9,7 +9,7 @@ enum TaskStatus {
 
 class Task {
 	String description = ''
-	LocalDate dueDate = new LocalDate()
+	LocalDate dueDate
 	TaskStatus status = TaskStatus.NOT_DONE
 	
 	static belongsTo = [user: User, dailyTask : DailyTask]
@@ -19,6 +19,6 @@ class Task {
     }
 	
 	static mapping = {
-		dueDate type:PersistentLocalDate
+//		dueDate type:PersistentLocalDate
 	}
 }
