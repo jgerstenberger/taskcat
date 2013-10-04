@@ -4,7 +4,7 @@ import org.jadira.usertype.dateandtime.joda.PersistentLocalDate;
 import org.joda.time.LocalDate;
 
 enum TaskStatus {
-	NOT_DONE, DONE
+	NOT_DONE, DONE, MISSED
 }
 
 class Task {
@@ -20,5 +20,9 @@ class Task {
 	
 	static mapping = {
 //		dueDate type:PersistentLocalDate
+	}
+	
+	boolean isPastDailyTask() {
+		dailyTask && dueDate < new LocalDate() 
 	}
 }

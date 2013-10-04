@@ -8,7 +8,7 @@ class UserController {
 	def TaskService taskService
 	
     def index() {
-		render User.all
+		[users: User.all]
 	}
 	
 	def show() {

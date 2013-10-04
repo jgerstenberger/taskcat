@@ -16,27 +16,37 @@ class TaskController {
 	}
 	
 	def save() {
-		print params
 		Task task = new Task(params)
 		task.user = User.get(params.userId)
 		task.save()
-		print task.user
-//		render(view: '/user/show', model: [user: task.user, task: task])
-//		User u = User.get(params.user_id).addToTasks(task)
-//		u.save()
-		print task.errors
 		redirect uri: '/'
 	}
 	
 	def updateStatus() {
-		print params
-		
-		if (params.id) {
+		if (!params.id.isEmpty()) {
 			Task task = Task.get(params.id)
 			task.status = params.status
 			task.save()
-			print task.errors
 		} else {
+			Task task = new Task(params)
+			task.dailyTask = DailyTask.get(params.dailyTaskId)
+			task.description = task.dailyTask.description
+			task.user = User.get(params.userId)
+			task.save()
+			
+			if (task.dailyTask.instancesThru) {
+				(task.dailyTask.instancesThru.plusDays(1)..<task.dueDate).each {
+					Task fillInTask = new Task(task.properties)
+					fillInTask.status = TaskStatus.NOT_DONE
+					fillInTask.dueDate = it
+					fillInTask.save()
+				}
+			}
+			
+			if (!task.dailyTask.instancesThru || task.dailyTask.instancesThru < task.dueDate) {
+				task.dailyTask.instancesThru = task.dueDate
+				task.dailyTask.save()
+			}
 		}
 		
 		render 'ok'
