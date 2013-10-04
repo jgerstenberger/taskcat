@@ -66,6 +66,7 @@ environments {
     }
     production {
         grails.logging.jul.usebridge = false
+		grails.dbconsole.enabled = true
         // TODO: grails.serverURL = "http://www.changeme.com"
     }
 }
@@ -90,8 +91,9 @@ log4j = {
            'org.hibernate',
            'net.sf.ehcache.hibernate'
 		   
-//	debug 'org.springframework.security',
-//			'org.openid4java'
+	debug 'org.springframework.security',
+			'org.openid4java',
+			'org.codehaus.groovy.grails.plugins.springsecurity.openid'
 }
 
 // Added by the Spring Security Core plugin:
@@ -114,6 +116,10 @@ grails.plugins.springsecurity.auth.loginFormUrl =
 	"/j_spring_openid_security_check?_spring_security_remember_me=1" + 
 	"&openid_identifier=" +	URLEncoder.encode('https://www.google.com/accounts/o8/id', 'UTF-8')
 
+grails.plugins.springsecurity.roleHierarchy = '''
+   ROLE_ADMIN > ROLE_USER
+'''
+	
 // Added by the Joda-Time plugin:
 grails.gorm.default.mapping = {
 	"user-type" type: org.jadira.usertype.dateandtime.joda.PersistentDateMidnight, class: org.joda.time.DateMidnight
@@ -130,3 +136,5 @@ grails.gorm.default.mapping = {
 	"user-type" type: org.jadira.usertype.dateandtime.joda.PersistentYearMonthDay, class: org.joda.time.YearMonthDay
 	"user-type" type: org.jadira.usertype.dateandtime.joda.PersistentYears, class: org.joda.time.Years
 }
+
+jodatime.format.html5 = true
