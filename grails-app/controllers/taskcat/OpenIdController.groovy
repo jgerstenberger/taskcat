@@ -81,7 +81,8 @@ class OpenIdController {
 		copyFromAttributeExchange command
 		
 		if (!createNewAccount(command.axContactEmail/*, command.password*/, openId, command.axNamePersonFirst)) {
-			return [command: command, openId: openId]
+//			return [command: command, openId: openId]
+			render 'Realm issue? Are you using a different URL?'
 		}
 
 		authenticateAndRedirect command.axContactEmail
