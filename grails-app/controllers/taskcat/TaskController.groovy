@@ -18,7 +18,8 @@ class TaskController {
 	def save() {
 		Task task = new Task(params)
 		task.user = User.get(params.userId)
-		task.save()
+		if (!task.save())
+			log.info("Task ${task.properties} not saved because of:\n${task.errors}")
 		redirect uri: '/'
 	}
 	

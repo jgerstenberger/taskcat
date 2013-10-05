@@ -1,3 +1,4 @@
+<r:require module="taskUpdate"/>
 <html>
 	<body>
 		<script>
