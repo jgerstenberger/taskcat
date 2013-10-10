@@ -7,7 +7,8 @@ class DailyTaskController {
 	def save() {
 		DailyTask dTask = new DailyTask(params)
 		dTask.user = User.get(params.userId)
-		dTask.save()
-		redirect uri: '/'
+		if (dTask.save())
+			log.info("Daily Task ${dTask.properties} not saved because of:\n${dTask.errors}")
+		redirect(controller: 'user', action: 'show', id: params.userId)
 	}
 }

@@ -1,0 +1,11 @@
+.create-task {
+	padding: 25px;
+}
+
+#createTaskPanel {
+	display: none;
+}
+
+#createDailyTaskPanel {
+	display: none;
+}

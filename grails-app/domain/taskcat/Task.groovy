@@ -11,18 +11,36 @@ class Task {
 	String description = ''
 	LocalDate dueDate
 	TaskStatus status = TaskStatus.NOT_DONE
+	LocalDate statusChangeDate
 	
 	static belongsTo = [user: User, dailyTask : DailyTask]
 	
     static constraints = {
 		dailyTask(nullable: true)
+		statusChangeDate(nullable: true)
     }
 	
 	static mapping = {
-//		dueDate type:PersistentLocalDate
+	}
+	
+	def beforeUpdate() {
+		if (isDirty('status'))
+			statusChangeDate = new LocalDate()
 	}
 	
 	boolean isPastDailyTask() {
-		dailyTask && dueDate < new LocalDate() 
+		dailyTask && isPastDue()
+	}
+	
+	boolean isPastDue() {
+		status == TaskStatus.NOT_DONE && dueDate < new LocalDate()
+	}
+	
+	boolean isNotDone() {
+		status == TaskStatus.NOT_DONE
+	}
+	
+	boolean isCompletedLate() {
+		status == TaskStatus.DONE && statusChangeDate > dueDate
 	}
 }

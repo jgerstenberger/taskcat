@@ -50,7 +50,7 @@ grails.project.dependency.resolution = {
         runtime ":hibernate:$grailsVersion"
         runtime ":jquery:1.8.3"
         runtime ":resources:1.1.6"
-		runtime ':twitter-bootstrap:2.3.2'
+		runtime ':twitter-bootstrap:3.0.0'
 		
         // Uncomment these (or add new ones) to enable additional resources capabilities
         //runtime ":zipped-resources:1.0"
@@ -65,6 +65,7 @@ grails.project.dependency.resolution = {
 		compile ':spring-security-core:1.2.7.3'
 		compile ':spring-security-openid:1.0.4'
 		compile ":joda-time:1.4"
-		compile ":jquery-ui:1.8.24"
+		compile ":bootstrap-datepicker:0.11"
+//		compile ":jquery-ui:1.8.24"
     }
 }

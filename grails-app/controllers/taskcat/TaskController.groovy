@@ -1,6 +1,7 @@
 package taskcat
 
-import grails.plugins.springsecurity.Secured;
+import grails.plugins.springsecurity.Secured
+import taskcat.TaskStatus
 
 @Secured(['ROLE_USER'])
 class TaskController {
@@ -8,11 +9,18 @@ class TaskController {
 	def TaskService taskService
 	
     def index() {
-		print TaskStatus.NOT_DONE == TaskStatus.valueOf(params.status)
-		if (TaskStatus.valueOf(params.status) == TaskStatus.NOT_DONE)
-			render(template: 'index', model: [tasks: taskService.currentTasksForUser(User.get(params.userId))])	
-		else
-			render 'ok'	
+		def user = User.get(params.userId)
+		def statusMap = [(TaskStatus.NOT_DONE): 
+				[retrieval: {theUser -> taskService.currentTasksForUser(theUser)},
+					tasksType: 'currentTasks'],
+			(TaskStatus.DONE): 
+				[retrieval: {theUser -> taskService.recentlyCompletedTasksForUser(theUser)},
+					tasksType: 'completedTasks']]
+		
+		def status = statusMap[TaskStatus.valueOf(params.status)]
+		
+		render(template: 'index', model: [tasks: status.retrieval(user),
+			tasksType: status.tasksType])	
 	}
 	
 	def save() {
@@ -20,33 +28,37 @@ class TaskController {
 		task.user = User.get(params.userId)
 		if (!task.save())
 			log.info("Task ${task.properties} not saved because of:\n${task.errors}")
-		redirect uri: '/'
+		redirect(controller: 'user', action: 'show', id: params.userId)
 	}
 	
 	def updateStatus() {
 		if (!params.id.isEmpty()) {
 			Task task = Task.get(params.id)
 			task.status = params.status
-			task.save()
+			if (!task.save())
+				log.info("Task ${task.properties} not saved because of:\n${task.errors}")
 		} else {
 			Task task = new Task(params)
 			task.dailyTask = DailyTask.get(params.dailyTaskId)
 			task.description = task.dailyTask.description
 			task.user = User.get(params.userId)
-			task.save()
+			if (!task.save())
+				log.info("Task ${task.properties} not saved because of:\n${task.errors}")
 			
 			if (task.dailyTask.instancesThru) {
 				(task.dailyTask.instancesThru.plusDays(1)..<task.dueDate).each {
 					Task fillInTask = new Task(task.properties)
 					fillInTask.status = TaskStatus.NOT_DONE
 					fillInTask.dueDate = it
-					fillInTask.save()
+					if (!fillInTask.save())
+						log.info("Task ${fillInTask.properties} not saved because of:\n${fillInTask.errors}")
 				}
 			}
 			
 			if (!task.dailyTask.instancesThru || task.dailyTask.instancesThru < task.dueDate) {
 				task.dailyTask.instancesThru = task.dueDate
-				task.dailyTask.save()
+				if (!task.dailyTask.save())
+					log.info("Task ${task.dailyTask.properties} not saved because of:\n${task.dailyTask.errors}")
 			}
 		}
 		

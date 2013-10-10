@@ -91,9 +91,9 @@ log4j = {
            'org.hibernate',
            'net.sf.ehcache.hibernate'
 		   
-	debug 'org.springframework.security',
-			'org.openid4java',
-			'org.codehaus.groovy.grails.plugins.springsecurity.openid'
+//	debug 'org.springframework.security',
+//			'org.openid4java',
+//			'org.codehaus.groovy.grails.plugins.springsecurity.openid'
 }
 
 // Added by the Spring Security Core plugin:

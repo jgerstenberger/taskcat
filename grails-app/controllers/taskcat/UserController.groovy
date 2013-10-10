@@ -20,8 +20,7 @@ class UserController {
 		def dailyTask = new DailyTask(userId: params.id)
 		dailyTask.user = User.get(params.id)
 
-		def tasks = taskService.currentTasksForUser(user)
-		
-		[user: User.get(params.id), tasks: tasks, task: task, dailyTask: dailyTask]
+		[user: User.get(params.id), users: User.all, 
+			task: task, dailyTask: dailyTask]
 	}
 }

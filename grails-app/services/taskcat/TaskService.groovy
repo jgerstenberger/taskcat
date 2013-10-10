@@ -10,6 +10,7 @@ class TaskService {
 			user == theUser &&
 			status == TaskStatus.NOT_DONE
 		}
+		
 		def dailyTasks = theUser.dailyTasks
 		
 		tasks.addAll(dailyTasks.findAll {
@@ -28,7 +29,15 @@ class TaskService {
 			}
 		}.flatten())
 		
-		println tasks
 		tasks
     }
+	
+	def recentlyCompletedTasksForUser(User theUser) {
+		def tasks = Task.findAll {
+			user == theUser &&
+			status == TaskStatus.DONE &&
+			statusChangeDate > new LocalDate().minusDays(3)
+		}
+
+	}
 }

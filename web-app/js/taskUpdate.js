@@ -10,8 +10,11 @@ function bindUpdateTaskButtons() {
 				{id: b.data('task-id'), dailyTaskId: b.data('daily-task-id'),
 					dueDate: b.data('due-date'), status: b.data('status'), userId: userId}, function() {
 			$.get($('head base').attr('href') + '/task?status=NOT_DONE&userId=' + userId, function(data){
-				$("#tasks").html(data);				
+				$("#currentTasks").replaceWith(data);				
 				bindUpdateTaskButtons();
+			});
+			$.get($('head base').attr('href') + '/task?status=DONE&userId=' + userId, function(data){
+				$("#completedTasks").replaceWith(data);				
 			});
 		});
 	});	
