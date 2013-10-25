@@ -20,4 +20,8 @@ $(function() {
 		$("#createDailyTaskPanel").hide();
 		return false;
 	});
+	
+	$("#editTaskCancel").click(function() {
+		history.go(-1);
+	})
 });

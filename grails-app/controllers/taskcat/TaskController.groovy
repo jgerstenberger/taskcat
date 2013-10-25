@@ -23,6 +23,20 @@ class TaskController {
 			tasksType: status.tasksType])	
 	}
 	
+	def edit() {
+		def task = Task.get(params.id)
+		println task.status
+		[user: task.user, task: task]
+	}
+	
+	def update() {
+		def task = Task.get(params.id)
+		task.properties = params
+		if (!task.save())
+			log.info("Task ${task.properties} not saved because of:\n${task.errors}")
+		redirect(controller: 'user', action: 'show', id: task.user.id)
+	}
+	
 	def save() {
 		Task task = new Task(params)
 		task.user = User.get(params.userId)

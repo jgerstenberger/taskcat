@@ -1,5 +1,5 @@
 <g:if test="${tasksType == 'currentTasks' && tasks.isEmpty()}">
-<img width="500" src="/taskcat/images/grumpygoaway.jpg"/>
+<g:img file="grumpygoaway.jpg" width="500"/>
 </g:if>
 <g:else>
 <table class="table" id="${tasksType}">
@@ -27,9 +27,13 @@
 						</button>
 					</g:if>
 				</g:if>
+				<sec:ifAnyGranted roles="ROLE_ADMIN">
+					<g:link class="btn btn-default editTaskButton" 
+						controller="task" action="edit" id="${task.id}">Edit</g:link>
+				</sec:ifAnyGranted>
 			</td>
 			<td>${task.description}</td>
-			<td>${task.dueDate}</td>
+			<td>${humanDate(date: task.dueDate)}</td>
 		</tr>
 	</g:each>
 </table>

@@ -29,7 +29,7 @@ class TaskService {
 			}
 		}.flatten())
 		
-		tasks
+		tasks.sort{ it.dueDate }
     }
 	
 	def recentlyCompletedTasksForUser(User theUser) {
@@ -39,5 +39,6 @@ class TaskService {
 			statusChangeDate > new LocalDate().minusDays(3)
 		}
 
+		tasks.sort{ it.dueDate }
 	}
 }

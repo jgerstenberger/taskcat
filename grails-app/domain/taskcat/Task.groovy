@@ -3,10 +3,6 @@ package taskcat
 import org.jadira.usertype.dateandtime.joda.PersistentLocalDate;
 import org.joda.time.LocalDate;
 
-enum TaskStatus {
-	NOT_DONE, DONE, MISSED
-}
-
 class Task {
 	String description = ''
 	LocalDate dueDate
