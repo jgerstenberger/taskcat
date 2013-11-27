@@ -5,6 +5,7 @@
 <table class="table" id="${tasksType}">
 	<tr>
 		<th/>
+		<th>Category</th>
 		<th>Task</th>
 		<th>Due</th>
 	</tr>
@@ -28,10 +29,17 @@
 					</g:if>
 				</g:if>
 				<sec:ifAnyGranted roles="ROLE_ADMIN">
-					<g:link class="btn btn-default editTaskButton" 
-						controller="task" action="edit" id="${task.id}">Edit</g:link>
+					<g:if test="${task.id}">
+						<g:link class="btn btn-default editTaskButton" 
+							controller="task" action="edit" id="${task.id}">Edit</g:link>
+					</g:if>
+					<g:elseif test="${task.dailyTask}">
+						<g:link class="btn btn-default editTaskButton" 
+							controller="dailyTask" action="edit" id="${task.dailyTask.id}">Edit</g:link>
+					</g:elseif>
 				</sec:ifAnyGranted>
 			</td>
+			<td></td>
 			<td>${task.description}</td>
 			<td>${humanDate(date: task.dueDate)}</td>
 		</tr>

@@ -1,4 +1,3 @@
-
 // locations to search for config files that get merged into the main config;
 // config files can be ConfigSlurper scripts, Java properties files, or classes
 // in the classpath in ConfigSlurper format
@@ -13,8 +12,9 @@
 // }
 
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
-grails.mime.file.extensions = true // enables the parsing of file extensions from URLs into the request format
-grails.mime.use.accept.header = false
+
+// The ACCEPT header will not be used for content negotiation for user agents containing the following strings (defaults to the 4 major rendering engines)
+grails.mime.disable.accept.header.userAgents = ['Gecko', 'WebKit', 'Presto', 'Trident']
 grails.mime.types = [
     all:           '*/*',
     atom:          'application/atom+xml',
@@ -27,6 +27,7 @@ grails.mime.types = [
     multipartForm: 'multipart/form-data',
     rss:           'application/rss+xml',
     text:          'text/plain',
+    hal:           ['application/hal+json','application/hal+xml'],
     xml:           ['text/xml', 'application/xml']
 ]
 
@@ -36,12 +37,34 @@ grails.mime.types = [
 // What URL patterns should be processed by the resources plugin
 grails.resources.adhoc.patterns = ['/images/*', '/css/*', '/js/*', '/plugins/*']
 
-// The default codec used to encode data with ${}
-grails.views.default.codec = "none" // none, html, base64
-grails.views.gsp.encoding = "UTF-8"
+// Legacy setting for codec used to encode data with ${}
+grails.views.default.codec = "html"
+
+// The default scope for controllers. May be prototype, session or singleton.
+// If unspecified, controllers are prototype scoped.
+grails.controllers.defaultScope = 'singleton'
+
+// GSP settings
+grails {
+    views {
+        gsp {
+            encoding = 'UTF-8'
+            htmlcodec = 'xml' // use xml escaping instead of HTML4 escaping
+            codecs {
+                expression = 'html' // escapes values inside ${}
+                scriptlet = 'html' // escapes output from scriptlets in GSPs
+                taglib = 'none' // escapes output from taglibs
+                staticparts = 'none' // escapes output from static template parts
+            }
+        }
+        // escapes all not-encoded output at final stage of outputting
+        filteringCodecForContentType {
+            //'text/html' = 'html'
+        }
+    }
+}
+ 
 grails.converters.encoding = "UTF-8"
-// enable Sitemesh preprocessing of GSP pages
-grails.views.gsp.sitemesh.preprocess = true
 // scaffolding templates configuration
 grails.scaffolding.templates.domainSuffix = 'Instance'
 
@@ -66,7 +89,6 @@ environments {
     }
     production {
         grails.logging.jul.usebridge = false
-		grails.dbconsole.enabled = true
         // TODO: grails.serverURL = "http://www.changeme.com"
     }
 }
@@ -90,36 +112,47 @@ log4j = {
            'org.springframework',
            'org.hibernate',
            'net.sf.ehcache.hibernate'
-		   
-//	debug 'org.springframework.security',
-//			'org.openid4java',
-//			'org.codehaus.groovy.grails.plugins.springsecurity.openid'
 }
 
+
 // Added by the Spring Security Core plugin:
-grails.plugins.springsecurity.userLookup.userDomainClassName = 'taskcat.User'
-grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'taskcat.UserRole'
-grails.plugins.springsecurity.authority.className = 'taskcat.Role'
-grails.plugins.springsecurity.rememberMe.persistent = true
-grails.plugins.springsecurity.rememberMe.persistentToken.domainClassName = 'taskcat.PersistentLogin'
+grails.plugin.springsecurity.userLookup.userDomainClassName = 'taskcat.User'
+grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'taskcat.UserRole'
+grails.plugin.springsecurity.authority.className = 'taskcat.Role'
+grails.plugin.springsecurity.controllerAnnotations.staticRules = [
+	'/':                              ['permitAll'],
+	'/index':                         ['permitAll'],
+	'/index.gsp':                     ['permitAll'],
+	'/**/js/**':                      ['permitAll'],
+	'/**/css/**':                     ['permitAll'],
+	'/**/images/**':                  ['permitAll'],
+	'/**/favicon.ico':                ['permitAll']
+]
 
-grails.plugins.springsecurity.openid.domainClass = 'taskcat.OpenID'
+grails.plugin.springsecurity.rememberMe.persistent = true
+grails.plugin.springsecurity.rememberMe.persistentToken.domainClassName = 'taskcat.PersistentLogin'
 
-grails.plugins.springsecurity.openid.registration.requiredAttributes = [
+grails.plugin.springsecurity.openid.domainClass = 'taskcat.OpenID'
+
+grails.plugin.springsecurity.openid.registration.requiredAttributes = [
 	axContactEmail: 'http://axschema.org/contact/email',
 	axNamePersonFirst: 'http://axschema.org/namePerson/first',
 	axNamePersonLast: 'http://axschema.org/namePerson/last']
 
-grails.plugins.springsecurity.openid.registration.optionalAttributes = []
+grails.plugin.springsecurity.openid.registration.optionalAttributes = []
 
-grails.plugins.springsecurity.auth.loginFormUrl = 
-	"/j_spring_openid_security_check?_spring_security_remember_me=1" + 
+grails.plugin.springsecurity.auth.loginFormUrl =
+	"/j_spring_openid_security_check?_spring_security_remember_me=1" +
 	"&openid_identifier=" +	URLEncoder.encode('https://www.google.com/accounts/o8/id', 'UTF-8')
 
-grails.plugins.springsecurity.roleHierarchy = '''
+grails.plugin.springsecurity.roleHierarchy = '''
    ROLE_ADMIN > ROLE_USER
 '''
-	
+
+grails.plugin.springsecurity.controllerAnnotations.staticRules = [
+	'/dbconsole/**': ['ROLE_ADMIN']
+]
+
 // Added by the Joda-Time plugin:
 grails.gorm.default.mapping = {
 	"user-type" type: org.jadira.usertype.dateandtime.joda.PersistentDateMidnight, class: org.joda.time.DateMidnight
@@ -136,5 +169,3 @@ grails.gorm.default.mapping = {
 	"user-type" type: org.jadira.usertype.dateandtime.joda.PersistentYearMonthDay, class: org.joda.time.YearMonthDay
 	"user-type" type: org.jadira.usertype.dateandtime.joda.PersistentYears, class: org.joda.time.Years
 }
-
-jodatime.format.html5 = true

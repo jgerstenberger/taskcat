@@ -1,6 +1,6 @@
 package taskcat
 
-import grails.plugins.springsecurity.Secured;
+import grails.plugin.springsecurity.annotation.Secured
 
 class MainController {
 

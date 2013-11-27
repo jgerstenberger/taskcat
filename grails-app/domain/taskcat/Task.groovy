@@ -9,7 +9,7 @@ class Task {
 	TaskStatus status = TaskStatus.NOT_DONE
 	LocalDate statusChangeDate
 	
-	static belongsTo = [user: User, dailyTask : DailyTask]
+	static belongsTo = [user: User, dailyTask : DailyTask, category: Category]
 	
     static constraints = {
 		dailyTask(nullable: true)

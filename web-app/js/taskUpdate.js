@@ -1,6 +1,6 @@
 $(function() {
 	bindUpdateTaskButtons();
-	bindEditTaskButtons();
+//	bindEditTaskButtons();
 });
 
 function bindUpdateTaskButtons() {

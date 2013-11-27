@@ -1,6 +1,6 @@
 package taskcat
 
-import grails.plugins.springsecurity.Secured;
+import grails.plugin.springsecurity.annotation.Secured;
 
 @Secured(['ROLE_USER'])
 class UserController {
@@ -21,6 +21,6 @@ class UserController {
 		dailyTask.user = User.get(params.id)
 
 		[user: User.get(params.id), users: User.all, 
-			task: task, dailyTask: dailyTask]
+			task: task, dailyTask: dailyTask, categories: Category.all]
 	}
 }

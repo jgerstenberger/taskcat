@@ -12,7 +12,7 @@ class CaseCategory {
 
 class HumanDateTagLib {
 	def humanDate = { attrs, body ->
-		println Days.daysBetween(new LocalDate(), attrs.date);
+//		println Days.daysBetween(new LocalDate(), attrs.date);
 		out << daysToString(Days.daysBetween(new LocalDate(), attrs.date).getDays())
 	}
 	

@@ -1,6 +1,6 @@
 package taskcat
 
-import grails.plugins.springsecurity.Secured
+import grails.plugin.springsecurity.annotation.Secured
 import taskcat.TaskStatus
 
 @Secured(['ROLE_USER'])
@@ -26,7 +26,7 @@ class TaskController {
 	def edit() {
 		def task = Task.get(params.id)
 		println task.status
-		[user: task.user, task: task]
+		[user: task.user, task: task, categories: Category.all]
 	}
 	
 	def update() {

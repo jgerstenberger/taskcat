@@ -1,5 +1,8 @@
 package taskcat
 
+import grails.plugin.springsecurity.annotation.Secured
+
+@Secured(['ROLE_USER'])
 class DailyTaskController {
 
     def index() { }
