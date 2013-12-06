@@ -39,10 +39,9 @@ class TaskController {
 	
 	def save() {
 		Task task = new Task(params)
-		task.user = User.get(params.userId)
 		if (!task.save())
 			log.info("Task ${task.properties} not saved because of:\n${task.errors}")
-		redirect(controller: 'user', action: 'show', id: params.userId)
+		redirect(controller: 'user', action: 'show', id: params.user)
 	}
 	
 	def updateStatus() {
