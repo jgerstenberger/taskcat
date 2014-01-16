@@ -14,6 +14,7 @@ class Task {
     static constraints = {
 		dailyTask(nullable: true)
 		statusChangeDate(nullable: true)
+		category(nullable: true)
     }
 	
 	static mapping = {
