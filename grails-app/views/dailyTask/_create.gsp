@@ -7,8 +7,12 @@
 
 	<g:form controller="dailyTask" action="save" class="create-task panel-body">
 		<div class="form-group">
-		<label for="dtDescription">Description</label>
-		<g:textField class="form-control" name="description" id="dtDescription" value="$dailyTask.description"/>
+			<label for="dtDescription">Description</label>
+			<g:textField class="form-control" name="description" id="dtDescription" value="$dailyTask.description"/>
+		</div>
+		<div class="form-group">
+			<label for="dtCategory">Category</label>
+			<g:select from="${categories}" optionKey="id" optionValue="name" class="form-control" name="category" id="dtCategory" noSelection="['':'']"/>	
 		</div>
 		<g:hiddenField name="userId" value="$dailyTask.userId"/>
 		<g:submitButton name="Add Task" class="btn btn-primary"/>

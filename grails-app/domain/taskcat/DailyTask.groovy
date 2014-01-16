@@ -7,11 +7,12 @@ class DailyTask {
 	String description = ''
 	LocalDate instancesThru
 	
-	static belongsTo = [user: User]
+	static belongsTo = [user: User, category: Category]
 	static hasMany = [tasks: Task]
 		
     static constraints = {
 		instancesThru(nullable: true)
+		category(nullable: true)
     }
 	
 	static mapping = {

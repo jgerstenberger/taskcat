@@ -76,5 +76,6 @@ grails.project.dependency.resolution = {
 		compile ':spring-security-openid:2.0-RC2'
 		compile ":joda-time:1.4"
 		compile ":bootstrap-datepicker:0.11"
+		compile ":quartz:1.0.1"
 	}
 }

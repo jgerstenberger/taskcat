@@ -17,7 +17,7 @@ class TaskService {
 			!it.instancesThru
 		}.collect{
 			new Task(user: theUser, dailyTask: it, dueDate: new LocalDate(),
-				description: it.description)
+				description: it.description, category: it.category)
 		})
 		
 		tasks.addAll(dailyTasks.findAll {
@@ -25,7 +25,7 @@ class TaskService {
 		}.collect { dt ->
 			(dt.instancesThru.plusDays(1)..new LocalDate()).collect() { date ->
 				new Task(user: theUser, dailyTask: dt, dueDate: date,
-					description: dt.description)
+					description: dt.description, category: dt.category)
 			}
 		}.flatten())
 		
@@ -33,10 +33,14 @@ class TaskService {
     }
 	
 	def recentlyCompletedTasksForUser(User theUser) {
+		completedTasksForUserInPastDays(theUser, 3)
+	}
+	
+	def completedTasksForUserInPastDays(User theUser, int days) {
 		def tasks = Task.findAll {
 			user == theUser &&
 			status == TaskStatus.DONE &&
-			statusChangeDate > new LocalDate().minusDays(3)
+			statusChangeDate > new LocalDate().minusDays(days)
 		}
 
 		tasks.sort{ it.dueDate }
