@@ -1,6 +1,7 @@
 package taskcat
 
 import grails.plugin.springsecurity.annotation.Secured
+import org.joda.time.LocalDate
 import taskcat.TaskStatus
 
 @Secured(['ROLE_USER'])
@@ -25,7 +26,6 @@ class TaskController {
 	
 	def edit() {
 		def task = Task.get(params.id)
-		println task.status
 		[user: task.user, task: task, categories: Category.all]
 	}
 	
@@ -55,6 +55,8 @@ class TaskController {
 			task.dailyTask = DailyTask.get(params.dailyTaskId)
 			task.description = task.dailyTask.description
 			task.user = User.get(params.userId)
+			task.category = task.dailyTask.category
+			task.statusChangeDate = new LocalDate()
 			if (!task.save())
 				log.info("Task ${task.properties} not saved because of:\n${task.errors}")
 			
