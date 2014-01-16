@@ -3,6 +3,11 @@ package taskcat
 import taskcat.User
 import taskcat.Role
 import taskcat.UserRole
+import grails.plugin.springsecurity.openid.OpenIdAuthenticationFailureHandler as OIAFH
+import grails.plugin.springsecurity.SpringSecurityUtils
+
+import org.springframework.security.web.WebAttributes;
+import org.springframework.security.web.savedrequest.DefaultSavedRequest
 
 /**
  * Manages associating OpenIDs with application users, both by creating a new local user
@@ -129,7 +134,8 @@ class OpenIdController {
 
 		def config = SpringSecurityUtils.securityConfig
 
-		def savedRequest = session[DefaultSavedRequest.SPRING_SECURITY_SAVED_REQUEST_KEY]
+//		def savedRequest = session[DefaultSavedRequest.SPRING_SECURITY_SAVED_REQUEST_KEY]
+		def savedRequest = session[WebAttributes.SAVED_REQUEST]
 		if (savedRequest && !config.successHandler.alwaysUseDefault) {
 			redirect url: savedRequest.redirectUrl
 		}
