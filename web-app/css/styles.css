@@ -9,3 +9,7 @@
 #createDailyTaskPanel {
 	display: none;
 }
+
+.checkbox-title {
+	margin-bottom: -10px;
+}

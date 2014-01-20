@@ -2,6 +2,8 @@ package taskcat
 
 import org.joda.time.Days;
 import org.joda.time.LocalDate
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 
 class CaseCategory {
@@ -11,6 +13,8 @@ class CaseCategory {
 }
 
 class HumanDateTagLib {
+	DateTimeFormatter dt = DateTimeFormat.forPattern("EEEE")
+	
 	def humanDate = { attrs, body ->
 //		println Days.daysBetween(new LocalDate(), attrs.date);
 		out << daysToString(Days.daysBetween(new LocalDate(), attrs.date).getDays())
@@ -26,5 +30,9 @@ class HumanDateTagLib {
 				case {it > 1}: return "${days} days from now"
 			}
 		}
+	}
+	
+	def humanDayOfWeek = { attrs, body ->
+		out << dt.print(new LocalDate().withDayOfWeek(Integer.valueOf(attrs['dayOfWeek'])))
 	}
 }

@@ -12,22 +12,25 @@ class TaskService {
 		}
 		
 		def dailyTasks = theUser.dailyTasks
+		def today = new LocalDate()
+		def dayOfWeekToday = today.dayOfWeek
 		
 		tasks.addAll(dailyTasks.findAll {
-			!it.instancesThru
+			!it.instancesThru && !it.excludedDays.contains(dayOfWeekToday)
 		}.collect{
-			new Task(user: theUser, dailyTask: it, dueDate: new LocalDate(),
+			new Task(user: theUser, dailyTask: it, dueDate: today,
 				description: it.description, category: it.category)
 		})
 		
 		tasks.addAll(dailyTasks.findAll {
-			it.instancesThru != null && it.instancesThru < new LocalDate()
+			it.instancesThru != null && it.instancesThru < today
 		}.collect { dt ->
-			(dt.instancesThru.plusDays(1)..new LocalDate()).collect() { date ->
+			(dt.instancesThru.plusDays(1)..today).collect() { date ->
+				if (!dt.excludedDays.contains(date.dayOfWeek))
 				new Task(user: theUser, dailyTask: dt, dueDate: date,
 					description: dt.description, category: dt.category)
 			}
-		}.flatten())
+		}.flatten() - null)
 		
 		tasks.sort{ it.dueDate }
     }

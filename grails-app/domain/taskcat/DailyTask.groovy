@@ -8,7 +8,7 @@ class DailyTask {
 	LocalDate instancesThru
 	
 	static belongsTo = [user: User, category: Category]
-	static hasMany = [tasks: Task]
+	static hasMany = [tasks: Task, excludedDays: Integer]
 		
     static constraints = {
 		instancesThru(nullable: true)
