@@ -1,30 +1,59 @@
+/* Copyright 2013 SpringSource.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package taskcat
 
-import taskcat.User
-import taskcat.Role
-import taskcat.UserRole
-import grails.plugin.springsecurity.openid.OpenIdAuthenticationFailureHandler as OIAFH
 import grails.plugin.springsecurity.SpringSecurityUtils
+import grails.plugin.springsecurity.annotation.Secured
+import grails.plugin.springsecurity.openid.*;
 
-import org.springframework.security.web.WebAttributes;
-import org.springframework.security.web.savedrequest.DefaultSavedRequest
+import org.springframework.beans.factory.InitializingBean
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.AuthenticationException
 
 /**
  * Manages associating OpenIDs with application users, both by creating a new local user
  * associated with an OpenID and also by associating a new OpenID to an existing account.
  */
-class OpenIdController {
+@Secured('permitAll')
+class OpenIdController implements InitializingBean {
 
 	/** Dependency injection for daoAuthenticationProvider. */
 	def daoAuthenticationProvider
 
+	/** Dependency injection for the grailsApplication. */
+	def grailsApplication
+
 	/** Dependency injection for OpenIDAuthenticationFilter. */
 	def openIDAuthenticationFilter
+
+	/** Dependency injection for the requestCache. */
+	def requestCache
 
 	/** Dependency injection for the springSecurityService. */
 	def springSecurityService
 
+	private Class User
+	private Class UserRole
+	private Class Role
+	private String usernamePropertyName
+	private String passwordPropertyName
+	private String enabledPropertyName
+	private String roleNameField
+
 	static defaultAction = 'auth'
+	static scope = 'singleton'
 
 	/**
 	 * Shows the login page. The user has the choice between using an OpenID and a username
@@ -33,7 +62,7 @@ class OpenIdController {
 	 * a new account, or click through to linkAccount to associate the OpenID with an
 	 * existing local account.
 	 */
-//	def auth = {
+//	def auth() {
 //
 //		def config = SpringSecurityUtils.securityConfig
 //
@@ -42,8 +71,8 @@ class OpenIdController {
 //			return
 //		}
 //
-//		[openIdPostUrl: "${request.contextPath}$openIDAuthenticationFilter.filterProcessesUrl",
-//		 daoPostUrl:    "${request.contextPath}${config.apf.filterProcessesUrl}",
+//		[openIdPostUrl: "$request.contextPath$openIDAuthenticationFilter.filterProcessesUrl",
+//		 daoPostUrl:    "$request.contextPath$config.apf.filterProcessesUrl",
 //		 persistentRememberMe: config.rememberMe.persistent,
 //		 rememberMeParameter: config.rememberMe.parameter,
 //		 openidIdentifier: config.openid.claimedIdentityFieldName]
@@ -58,9 +87,9 @@ class OpenIdController {
 	 * in the session rather than passing it between submits so the user has no opportunity
 	 * to change it.
 	 */
-	def createAccount = { OpenIdRegisterCommand command ->
+	def createAccount(OpenIdRegisterCommand command) {
 
-		String openId = session[OIAFH.LAST_OPENID_USERNAME]
+		String openId = session[OpenIdAuthenticationFailureHandler.LAST_OPENID_USERNAME]
 		if (!openId) {
 			flash.error = 'Sorry, an OpenID was not found'
 			return [command: command]
@@ -91,9 +120,9 @@ class OpenIdController {
 	 * The registration page has a link to this action so an existing user who successfully
 	 * authenticated with an OpenID can associate it with their account for future logins.
 	 */
-//	def linkAccount = { OpenIdLinkAccountCommand command ->
+//	def linkAccount(OpenIdLinkAccountCommand command) {
 //
-//		String openId = session[OIAFH.LAST_OPENID_USERNAME]
+//		String openId = session[OpenIdAuthenticationFailureHandler.LAST_OPENID_USERNAME]
 //		if (!openId) {
 //			flash.error = 'Sorry, an OpenID was not found'
 //			return [command: command]
@@ -127,15 +156,13 @@ class OpenIdController {
 	 * @param username the user's login name
 	 */
 	protected void authenticateAndRedirect(String username) {
-		session.removeAttribute OIAFH.LAST_OPENID_USERNAME
-		session.removeAttribute OIAFH.LAST_OPENID_ATTRIBUTES
+		session.removeAttribute OpenIdAuthenticationFailureHandler.LAST_OPENID_USERNAME
+		session.removeAttribute OpenIdAuthenticationFailureHandler.LAST_OPENID_ATTRIBUTES
 
 		springSecurityService.reauthenticate username
 
 		def config = SpringSecurityUtils.securityConfig
-
-//		def savedRequest = session[DefaultSavedRequest.SPRING_SECURITY_SAVED_REQUEST_KEY]
-		def savedRequest = session[WebAttributes.SAVED_REQUEST]
+		def savedRequest = requestCache.getRequest(request, response)
 		if (savedRequest && !config.successHandler.alwaysUseDefault) {
 			redirect url: savedRequest.redirectUrl
 		}
@@ -157,7 +184,9 @@ class OpenIdController {
 			def config = SpringSecurityUtils.securityConfig
 
 //			password = encodePassword(password)
-			def user = new User(username: username, password: 'foo', firstName: firstName, enabled: true)
+			def user = User.newInstance((usernamePropertyName): username,
+			                            (passwordPropertyName): 'foo',
+			                            (enabledPropertyName): true)
 
 			user.addToOpenIds(url: openId)
 
@@ -166,7 +195,7 @@ class OpenIdController {
 			}
 
 			for (roleName in config.openid.registration.roleNames) {
-				UserRole.create user, Role.findByAuthority(roleName)
+				UserRole.create user, Role.findWhere((roleNameField): roleName)
 			}
 			return true
 		}
@@ -176,7 +205,8 @@ class OpenIdController {
 	protected String encodePassword(String password) {
 		def config = SpringSecurityUtils.securityConfig
 		def encode = config.openid.encodePassword
-		if (!(encode instanceof Boolean) || (encode instanceof Boolean && encode)) {
+		if (!(encode instanceof Boolean)) encode = false
+		if (encode) {
 			password = springSecurityService.encodePassword(password)
 		}
 		password
@@ -192,11 +222,10 @@ class OpenIdController {
 //	protected void registerAccountOpenId(String username, String password, String openId) {
 //		// check that the user exists, password is valid, etc. - doesn't actually log in or log out,
 //		// just checks that user exists, password is valid, account not locked, etc.
-//		daoAuthenticationProvider.authenticate(
-//				new UsernamePasswordAuthenticationToken(username, password))
+//		daoAuthenticationProvider.authenticate new UsernamePasswordAuthenticationToken(username, password)
 //
 //		User.withTransaction { status ->
-//			def user = User.findByUsername(username)
+//			def user = User.findWhere((usernamePropName): username)
 //			user.addToOpenIds(url: openId)
 //			if (!user.validate()) {
 //				status.setRollbackOnly()
@@ -209,14 +238,24 @@ class OpenIdController {
 	 * @param command  the command
 	 */
 	protected void copyFromAttributeExchange(OpenIdRegisterCommand command) {
-		List attributes = session[OIAFH.LAST_OPENID_ATTRIBUTES] ?: []
-		for (attribute in attributes) {		
+		List attributes = session[OpenIdAuthenticationFailureHandler.LAST_OPENID_ATTRIBUTES] ?: []
+		for (attribute in attributes) {
 			// TODO document
 			String name = attribute.name
 			if (command.hasProperty(name)) {
 				command."$name" = attribute.values[0]
 			}
 		}
+	}
+
+	void afterPropertiesSet() throws Exception {
+		def conf = SpringSecurityUtils.securityConfig
+		usernamePropertyName = conf.userLookup.usernamePropertyName
+		passwordPropertyName = conf.userLookup.passwordPropertyName
+		enabledPropertyName = conf.userLookup.enabledPropertyName
+		roleNameField = conf.authority.nameField
+		User = grailsApplication.getClassForName(conf.userLookup.userDomainClassName)
+		UserRole = grailsApplication.getClassForName(conf.userLookup.authorityJoinClassName)
 	}
 }
 
@@ -229,9 +268,17 @@ class OpenIdRegisterCommand {
 //
 //	static constraints = {
 //		username blank: false, validator: { String username, command ->
+//
+//			def User = grailsApplication.getClassForName(SpringSecurityUtils.securityConfig.userLookup.userDomainClassName)
+//
 //			User.withNewSession { session ->
-//				if (username && User.countByUsername(username)) {
-//					return 'openIdRegisterCommand.username.error.unique'
+//				if (username) {
+//					boolean exists = User.createCriteria().count {
+//						eq usernamePropName, username
+//					}
+//					if (exists) {
+//						return 'openIdRegisterCommand.username.error.unique'
+//					}
 //				}
 //			}
 //		}
@@ -241,8 +288,8 @@ class OpenIdRegisterCommand {
 //			}
 //
 //			if (password && password.length() >= 8 && password.length() <= 64 &&
-//					(!password.matches('^.*\\p{Alpha}.*$') ||
-//					!password.matches('^.*\\p{Digit}.*$') ||
+//					(!password.matches('^.*\\\\p{Alpha}.*$') ||
+//					!password.matches('^.*\\\\p{Digit}.*$') ||
 //					!password.matches('^.*[!@#$%^&].*$'))) {
 //				return 'openIdRegisterCommand.password.error.strength'
 //			}
