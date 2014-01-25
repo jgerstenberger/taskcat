@@ -77,5 +77,7 @@ grails.project.dependency.resolution = {
 		compile ":joda-time:1.4"
 		compile ":bootstrap-datepicker:0.11"
 		compile ":quartz:1.0.1"
+		compile ":mail:1.0.1"
+		compile ":sparklines:0.1"
 	}
 }

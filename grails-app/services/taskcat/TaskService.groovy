@@ -40,12 +40,26 @@ class TaskService {
 	}
 	
 	def completedTasksForUserInPastDays(User theUser, int days) {
-		def tasks = Task.findAll {
+		Task.findAll {
 			user == theUser &&
 			status == TaskStatus.DONE &&
 			statusChangeDate > new LocalDate().minusDays(days)
-		}
-
-		tasks.sort{ it.dueDate }
+		}.sort{ it.dueDate }
 	}
+	
+	def recentTasksInCategories(User theUser, int days) {
+		def tasks = Task.findAll {
+			user == theUser &&
+			dueDate > new LocalDate().minusDays(days)
+		}.sort{it.dueDate}
+		
+		def categoryMap = [:].withDefault {[]}
+		tasks.each { task ->
+			categoryMap[task.category] << task
+		}
+		
+		categoryMap
+	}
+	
+	 
 }
