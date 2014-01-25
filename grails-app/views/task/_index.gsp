@@ -40,7 +40,7 @@
 				</sec:ifAnyGranted>
 			</td>
 			<td>${task.category?.name}</td>
-			<td>${task.description}</td>
+			<td><g:if test="${task.isDailyTaskType()}"><span class="glyphicon glyphicon-repeat"></span> </g:if>${task.description}</td>
 			<td>${humanDate(date: task.dueDate)}</td>
 		</tr>
 	</g:each>

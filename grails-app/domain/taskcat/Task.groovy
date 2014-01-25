@@ -40,4 +40,8 @@ class Task {
 	boolean isCompletedLate() {
 		status == TaskStatus.DONE && statusChangeDate > dueDate
 	}
+	
+	boolean isDailyTaskType() {
+		dailyTask != null
+	}
 }
