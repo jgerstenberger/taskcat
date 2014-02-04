@@ -111,6 +111,7 @@ class OpenIdController implements InitializingBean {
 		if (!createNewAccount(command.axContactEmail/*, command.password*/, openId, command.axNamePersonFirst)) {
 //			return [command: command, openId: openId]
 			render 'Realm issue? Are you using a different URL?'
+			return
 		}
 
 		authenticateAndRedirect command.axContactEmail
@@ -186,7 +187,8 @@ class OpenIdController implements InitializingBean {
 //			password = encodePassword(password)
 			def user = User.newInstance((usernamePropertyName): username,
 			                            (passwordPropertyName): 'foo',
-			                            (enabledPropertyName): true)
+			                            (enabledPropertyName): true,
+                                                    firstName: firstName)
 
 			user.addToOpenIds(url: openId)
 
