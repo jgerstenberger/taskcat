@@ -12,32 +12,7 @@
 	<g:each var="task" in="${tasks}">
 		<tr class="${task.isPastDue() ? 'danger' : ''}">
 			<td>
-				<g:if test="${task.isNotDone()}">
-					<button type="button" class="btn btn-success updateTaskButton" 
-						data-task-id="${task.id ?: ''}" 
-						data-daily-task-id="${task.dailyTask?.id}"
-						data-due-date="${task.dueDate ?: ''}"
-						data-status="DONE">Done
-					</button>
-					<g:if test="${task.isPastDailyTask()}">
-						<button type="button" class="btn btn-danger updateTaskButton" 
-							data-task-id="${task.id ?: ''}" 
-							data-daily-task-id="${task.dailyTask?.id}"
-							data-due-date="${task.dueDate ?: ''}"
-							data-status="MISSED">Missed
-						</button>
-					</g:if>
-				</g:if>
-				<sec:ifAnyGranted roles="ROLE_ADMIN">
-					<g:if test="${task.id}">
-						<g:link class="btn btn-default editTaskButton" 
-							controller="task" action="edit" id="${task.id}">Edit</g:link>
-					</g:if>
-					<g:elseif test="${task.dailyTask}">
-						<g:link class="btn btn-default editTaskButton" 
-							controller="dailyTask" action="edit" id="${task.dailyTask.id}">Edit</g:link>
-					</g:elseif>
-				</sec:ifAnyGranted>
+				<g:render template="taskButtons" model="['task':task]"></g:render>
 			</td>
 			<td>${task.category?.name}</td>
 			<td><g:if test="${task.isDailyTaskType()}"><span class="glyphicon glyphicon-repeat"></span> </g:if>${task.description}</td>
