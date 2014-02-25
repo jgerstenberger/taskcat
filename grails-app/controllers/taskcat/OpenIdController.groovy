@@ -258,6 +258,7 @@ class OpenIdController implements InitializingBean {
 		roleNameField = conf.authority.nameField
 		User = grailsApplication.getClassForName(conf.userLookup.userDomainClassName)
 		UserRole = grailsApplication.getClassForName(conf.userLookup.authorityJoinClassName)
+		Role = grailsApplication.getClassForName(conf.authority.className)
 	}
 }
 

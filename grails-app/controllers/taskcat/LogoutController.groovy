@@ -1,5 +1,7 @@
 package taskcat
 
+import grails.plugin.springsecurity.SpringSecurityUtils;
+
 class LogoutController {
 
 	/**
