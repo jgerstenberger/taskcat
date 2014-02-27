@@ -4,6 +4,7 @@ import org.joda.time.LocalDate
 import taskcat.TaskStatus;
 
 class TaskService {
+	static transactional = false
 
     def currentTasksForUser(User theUser) {
 		def tasks = Task.findAll {
@@ -35,23 +36,11 @@ class TaskService {
 		tasks.sort{ it.dueDate }
     }
 	
-	def recentlyCompletedTasksForUser(User theUser) {
-		completedTasksForUserInPastDays(theUser, 3)
-	}
-	
-	def completedTasksForUserInPastDays(User theUser, int days) {
-		Task.findAll {
-			user == theUser &&
-			status == TaskStatus.DONE &&
-			statusChangeDate > new LocalDate().minusDays(days)
-		}.sort{ it.dueDate }
-	}
-	
 	def recentTasksInCategories(User theUser, int days) {
-		def tasks = Task.findAll {
+		def tasks = Task.findAll(sort:'dueDate') {
 			user == theUser &&
 			dueDate > new LocalDate().minusDays(days)
-		}.sort{it.dueDate}
+		}
 		
 		def categoryMap = [:].withDefault {[]}
 		tasks.each { task ->
@@ -60,6 +49,4 @@ class TaskService {
 		
 		categoryMap
 	}
-	
-	 
 }

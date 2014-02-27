@@ -13,8 +13,7 @@ class EmailJob {
 	MailService mailService
 	
     static triggers = {
-//      cron name: 'myTrigger', cronExpression: "00 03 22 * * ?"
-		cron name: 'myTrigger', cronExpression: '0 * * * * ?'
+//		cron name: 'myTrigger', cronExpression: '0 * * * * ?'
     }
 
     def execute() {
@@ -22,7 +21,7 @@ class EmailJob {
 //		println('foo')
 //		LocalDate yesterday = new LocalDate().minusDays(1)
 		User.all.each { user ->
-			def completed = taskService.completedTasksForUserInPastDays(user, 1)
+			def completed = Task.completedRecentForUser(1, user)
 			def current = taskService.currentTasksForUser(user)
 			
 //			println(groovyPageRenderer.render(view: '/email/dailyEmail', 

@@ -15,8 +15,8 @@ class TaskController {
 				[retrieval: {theUser -> taskService.currentTasksForUser(theUser)},
 					tasksType: 'currentTasks'],
 			(TaskStatus.DONE): 
-				[retrieval: {theUser -> taskService.recentlyCompletedTasksForUser(theUser)},
-					tasksType: 'completedTasks']]
+				[retrieval: {theUser -> Task.completed.recent(3).forUser(user).list()},
+				 tasksType: 'completedTasks']]
 		
 		def status = statusMap[TaskStatus.valueOf(params.status)]
 		
@@ -78,5 +78,12 @@ class TaskController {
 		}
 		
 		render 'ok'
+	}
+	
+	def recentForCategory(int userId, int categoryId) {
+		def tasks = Task.completed.inCategory(Category.get(categoryId)).forUser(User.get(userId)).
+			list(sort: 'id', order: 'desc', max: 3)
+		
+		render(template:'recentForCategory', model:	[recentlyCompleted: tasks])
 	}
 }

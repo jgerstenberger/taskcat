@@ -20,6 +20,15 @@ class Task {
 	static mapping = {
 	}
 	
+	static namedQueries = {
+		completed {	eq 'status', TaskStatus.DONE }
+		forUser { user -> eq 'user', user }
+		inCategory { category -> eq 'category', category }
+		recent { days ->
+			gt 'dueDate', new LocalDate().minusDays(days)
+		}		
+	}
+	
 	def beforeUpdate() {
 		if (isDirty('status'))
 			statusChangeDate = new LocalDate()
