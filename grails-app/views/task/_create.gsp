@@ -7,7 +7,7 @@
 	<g:form controller="task" action="save" class="create-task panel-body">
 		<g:render template="/task/taskFormFields"/>
 	
-		<g:hiddenField name="user" value="$task.userId"/>
+		<g:hiddenField name="user" value="${task.user.id}"/>
 		<g:submitButton name="Add Task" class="btn btn-primary"/>
 		<button id="createTaskCancel" class="btn btn-default">Cancel</button>
 	</g:form>
