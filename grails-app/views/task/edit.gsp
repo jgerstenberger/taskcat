@@ -1,7 +1,7 @@
 <r:require module="taskCreate"/>
 
 <div class="container">
-	<div class="panel panel-primary" id="editDailyTaskPanel">
+	<div class="panel panel-primary" id="editTaskPanel">
 		<div class="panel-heading">
 			<h3 class="panel-title">Edit Task</h3>
 		</div>
@@ -18,5 +18,24 @@
 			<button id="editTaskCancel" class="btn btn-default">Cancel</button>
 			<button id="editTaskDelete" class="btn btn-danger">Delete</button>
 		</g:form>
+		<g:form name="deleteTaskForm" action="delete">
+			<g:hiddenField name="id" value="${task.id}"/>
+		</g:form>
 	</div>
+	<g:if test="${!otherUsers.empty}">
+		<div class="panel panel-primary" id="copyTaskPanel">
+			<div class="panel-heading">
+				<h3 class="panel-title">Copy Task</h3>
+			</div>
+			
+			<g:form class="panel-body" role="form" action="copy">
+				<div class="form-group">
+					<label for="destUserId">Copy To:</label>
+					<g:select name="destUserId" from="${otherUsers}" optionKey="id" optionValue="firstName" class="form-control"/>
+				</div>
+				<g:hiddenField name="id" value="${task.id}"/>
+				<g:submitButton name="Copy" class="btn btn-primary"/>
+			</g:form>
+		</div>
+	</g:if>
 </div>

@@ -21,12 +21,13 @@ class TaskController {
 		def status = statusMap[TaskStatus.valueOf(params.status)]
 		
 		render(template: 'index', model: [tasks: status.retrieval(user),
-			tasksType: status.tasksType])	
+			tasksType: status.tasksType, user: user])	
 	}
 	
 	def edit() {
 		def task = Task.get(params.id)
-		[user: task.user, task: task, categories: Category.all]
+		def otherUsers = User.findAllByIdNotEqual(task.user.id)
+		[user: task.user, task: task, categories: Category.all, otherUsers: otherUsers]
 	}
 	
 	def update() {
@@ -42,6 +43,14 @@ class TaskController {
 		if (!task.save())
 			log.info("Task ${task.properties} not saved because of:\n${task.errors}")
 		redirect(controller: 'user', action: 'show', id: params.user)
+	}
+	
+	def delete(int id) {
+		println 'delete'
+		Task task = Task.get(id)
+		User user = task.user
+		task.delete()
+		redirect(controller: 'user', action: 'show', id: user.id)
 	}
 	
 	def updateStatus() {
@@ -80,10 +89,24 @@ class TaskController {
 		render 'ok'
 	}
 	
+	def copy(int id, int destUserId) {
+		def task = new Task(Task.get(id).properties)
+		task.user = User.get(destUserId)
+		if (!task.save()) {
+			render task.errors	
+		} else {
+			redirect(controller: 'user', action: 'show', id: task.user.id)
+		}
+	}
+	
 	def recentForCategory(int userId, int categoryId) {
-		def tasks = Task.completed.inCategory(Category.get(categoryId)).forUser(User.get(userId)).
+		def tasks = Task.inCategory(Category.get(categoryId)).forUser(User.get(userId)).
 			list(sort: 'id', order: 'desc', max: 3)
 		
-		render(template:'recentForCategory', model:	[recentlyCompleted: tasks])
+		render(template:'recentForCategory', model:	[recent: tasks])
 	}
+	
+//	def create() {
+//		render(template:'create', model:[])
+//	}
 }
