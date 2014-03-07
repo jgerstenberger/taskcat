@@ -9,5 +9,5 @@
 </div>
 <div class="form-group">
 	<label for="dueDate">Due Date</label>
-	<g:textField class="form-control" name="dueDate" id="dueDate" value="${task.dueDate ?: ''}"/>
+	<g:textField data-provide="datepicker" data-date-format="yyyy-mm-dd" class="form-control" name="dueDate" id="dueDate" value="${task.dueDate ?: ''}"/>
 </div>

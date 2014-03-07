@@ -1,5 +1,3 @@
-<r:require module="taskCreate"/>
-
 <div class="panel panel-primary" id="createTaskPanel">
 	<div class="panel-heading">
 		<h3 class="panel-title">Create Task</h3>

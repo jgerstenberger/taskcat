@@ -9,20 +9,29 @@ class TaskController {
 
 	def TaskService taskService
 	
-    def index() {
-		def user = User.get(params.userId)
-		def statusMap = [(TaskStatus.NOT_DONE): 
-				[retrieval: {theUser -> taskService.currentTasksForUser(theUser)},
-					tasksType: 'currentTasks'],
-			(TaskStatus.DONE): 
-				[retrieval: {theUser -> Task.completed.recent(3).forUser(user).list()},
-				 tasksType: 'completedTasks']]
-		
-		def status = statusMap[TaskStatus.valueOf(params.status)]
-		
-		render(template: 'index', model: [tasks: status.retrieval(user),
-			tasksType: status.tasksType, user: user])	
+	def index(int userId, String status) {
+		[(TaskStatus.NOT_DONE.name): this.&indexNotDone, 
+		(TaskStatus.DONE.name): this.&indexDone][status](userId)
 	}
+	
+	def indexNotDone(int userId) {
+		def user = User.get(userId)
+		render(template: 'index', model: [tasks: taskService.currentTasksForUser(user),
+			tasksType: 'currentTasks', user: user])
+	}
+	
+	def indexDone(int userId) {
+		def user = User.get(userId)
+		render(template: 'index', model: [tasks: Task.completed.recent(3).forUser(user).list(),
+			tasksType: 'completedTasks', user: user])
+	}
+	
+	def indexCategory(int userId, int categoryId) {
+		def user = User.get(userId)
+		render(template: 'index', model: [user: user, tasks:
+			Task.forUser(user).inCategory(Category.get(categoryId)).list(
+				[sort: 'dueDate', order: 'desc', max:20])])
+	}	
 	
 	def edit() {
 		def task = Task.get(params.id)
@@ -106,7 +115,14 @@ class TaskController {
 		render(template:'recentForCategory', model:	[recent: tasks])
 	}
 	
-//	def create() {
-//		render(template:'create', model:[])
-//	}
+	def create(int userId) {
+		def task = new Task()
+		task.user = request.getAttribute("user")
+		
+		def category = request.getAttribute("category")
+		if (category)
+			task.category = category
+		
+		render(template:'create', model:[categories: Category.all, task: task])
+	}
 }

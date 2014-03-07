@@ -1,6 +1,4 @@
 $(function() {
-	$("#dueDate").datepicker({format: 'yyyy-mm-dd'});
-	
 	$("#createTask").click(function() {
 		$("#createTaskPanel").show();
 		return false;
@@ -30,23 +28,26 @@ $(function() {
 		return false;
 	});
 	
-	$("#createTaskPanel #category").change(function() {
-		var select = $(this);
-//		$.ajax({url: $('head base').attr('href') + '/task/recentForCategory?categoryId=' 
-//			+ select.val() + '&userId=' + userId, cache:false}).done(function(data) {
-//			$('#descriptionHelperSection').html(data);
-//			bindDescriptionHelperLinks();
-//		});
-		$.get($('head base').attr('href') + '/task/recentForCategory?categoryId=' 
-				+ select.val() + '&userId=' + userId, function(data) {
-			$('#descriptionHelperSection').html(data);
-			bindDescriptionHelperLinks();
-			if ($('#dueDate').val() == '') {
-				$('#dueDate').val($('#nextDueDate').val());
-			}
-		});
+	var categorySelect = $("#createTaskPanel #category");
+	categorySelect.change(function() {
+		updateDescriptionHelperLinks($(this));
 	});
+	
+	if (categorySelect.val() != '')
+		updateDescriptionHelperLinks(categorySelect)
 });
+
+function updateDescriptionHelperLinks(select) {
+	$.get($('head base').attr('href') + '/task/recentForCategory?categoryId=' 
+			+ select.val() + '&userId=' + userId, function(data) {
+		$('#descriptionHelperSection').html(data);
+		bindDescriptionHelperLinks();
+		if ($('#dueDate').val() == '') {
+			$('#dueDate').val($('#nextDueDate').val());
+			$('#dueDate').datepicker('update');
+		}
+	});
+}
 
 function bindDescriptionHelperLinks() {
 	$(".descriptionHelperBtn").click(function() {

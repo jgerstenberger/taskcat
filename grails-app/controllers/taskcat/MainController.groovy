@@ -8,7 +8,10 @@ class MainController {
 	
 	@Secured(['ROLE_USER'])
     def index() {
-//		render springSecurityService.getPrincipal().id
 		redirect(controller: 'user', action: 'show', id: springSecurityService.getPrincipal().id)
+	}
+	
+	def taskbar() {
+		render template:'taskbar', model:[user:request.getAttribute("user"), users: User.all]
 	}
 }

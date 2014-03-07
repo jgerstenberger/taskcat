@@ -23,13 +23,3 @@
 		</tr>
 	</g:each>
 </table>
-<%--			<td class="visible-xs">--%>
-<%--				<div class="xs-task-btn-holder">--%>
-<%--					<div id="task-btns-${task.id}" class="xs-task-btns panel panel-default">--%>
-<%--						<div class="panel-body">--%>
-<%--							<g:render template="taskButtons" model="['task':task]"></g:render>			--%>
-<%--						</div>--%>
-<%--					</div>--%>
-<%--				</div>--%>
-<%--				<span data-task-id="${task.id}" class="glyphicon glyphicon-cog task-cog"></span>--%>
-<%--			</td>--%>
