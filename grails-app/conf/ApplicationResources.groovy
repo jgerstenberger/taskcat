@@ -9,4 +9,8 @@ modules = {
 		dependsOn 'bootstrap-datepicker'
         resource url:'js/taskUpdate.js'
     }
+	taskIndex {
+		dependsOn 'bootstrap'
+		resource url:'js/taskIndex.js'
+	}
 }

@@ -13,9 +13,11 @@ function bindUpdateTaskButtons() {
 			$.get($('head base').attr('href') + '/task?status=NOT_DONE&userId=' + userId, function(data){
 				$("#currentTasks").replaceWith(data);				
 				bindUpdateTaskButtons();
+				bindCogs();
 			});
 			$.get($('head base').attr('href') + '/task?status=DONE&userId=' + userId, function(data){
 				$("#completedTasks").replaceWith(data);				
+				bindCogs();
 			});
 		});
 	});	
