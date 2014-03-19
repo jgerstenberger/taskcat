@@ -42,12 +42,20 @@ class Task {
 		status == TaskStatus.NOT_DONE && dueDate < new LocalDate()
 	}
 	
+	boolean isDueTodayAndNotDone() {
+		status == TaskStatus.NOT_DONE && dueDate == new LocalDate()
+	}
+	
 	boolean isNotDone() {
 		status == TaskStatus.NOT_DONE
 	}
 	
 	boolean isCompletedLate() {
 		status == TaskStatus.DONE && statusChangeDate > dueDate
+	}
+	
+	boolean isCompleted() {
+		status == TaskStatus.DONE
 	}
 	
 	boolean isDailyTaskType() {

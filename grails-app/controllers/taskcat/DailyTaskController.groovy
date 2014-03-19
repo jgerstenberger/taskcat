@@ -14,4 +14,8 @@ class DailyTaskController {
 			log.info("Daily Task ${dTask.properties} not saved because of:\n${dTask.errors}")
 		redirect(controller: 'user', action: 'show', id: params.userId)
 	}
+	
+	def create() {
+		render(template:'create', model:[dailyTask:new DailyTask()])
+	}
 }

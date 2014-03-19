@@ -9,4 +9,11 @@ modules = {
 		dependsOn 'bootstrap-datepicker'
         resource url:'js/taskUpdate.js'
     }
+    taskIndex {
+		dependsOn 'sparklines'
+        resource url:'js/taskIndex.js'
+    }
+	sparklines {
+		resource url:'js/jquery.sparkline.min.js'
+	}
 }

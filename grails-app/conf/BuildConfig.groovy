@@ -39,6 +39,7 @@ grails.project.dependency.resolution = {
         grailsHome()
         mavenLocal()
         grailsCentral()
+		mavenRepo "http://repo.grails.org/grails/core"
         mavenCentral()
         // uncomment these (or add new ones) to enable remote dependency resolution from public Maven repositories
         //mavenRepo "http://repository.codehaus.org"
@@ -52,6 +53,7 @@ grails.project.dependency.resolution = {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
         // runtime 'mysql:mysql-connector-java:5.1.24'
 		compile "org.jadira.usertype:usertype.jodatime:1.9.1"
+		compile "org.compass-project:compass:2.2.1"
     }
 
     plugins {
@@ -72,12 +74,12 @@ grails.project.dependency.resolution = {
         //runtime ":cached-resources:1.1"
         //runtime ":yui-minify-resources:0.1.5"
 
-		runtime ':twitter-bootstrap:3.0.0'
+		runtime ':twitter-bootstrap:3.1.1'
 		compile ':spring-security-openid:2.0-RC2'
 		compile ":joda-time:1.4"
 		compile ":bootstrap-datepicker:0.11"
 		compile ":quartz:1.0.1"
 		compile ":mail:1.0.1"
-		compile ":sparklines:0.1"
+		compile ":searchable:0.6.6"
 	}
 }

@@ -1,4 +1,5 @@
 <r:require module="taskUpdate"/>
+<r:require module="taskIndex"/>
 <html>
 	<body>
 		<div class="panel panel-primary">

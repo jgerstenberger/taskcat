@@ -14,21 +14,30 @@ class TaskController {
 		(TaskStatus.DONE.name): this.&indexDone][status](userId)
 	}
 	
+	def dailyTaskTrend(user) {
+		def statMap = [(TaskStatus.MISSED): -1, (TaskStatus.NOT_DONE): 0, (TaskStatus.DONE): 1]
+		user.dailyTasks.collectEntries { dt ->
+			[(dt): Task.findAllByDailyTask(dt, [sort: 'dueDate', order:'desc', max:14])*.status.
+				collect{statMap[it]}.reverse()]
+		}
+	}
+	
 	def indexNotDone(int userId) {
 		def user = User.get(userId)
+		
 		render(template: 'index', model: [tasks: taskService.currentTasksForUser(user),
-			tasksType: 'currentTasks', user: user])
+			tasksType: 'currentTasks', user: user, dtTrend: dailyTaskTrend(user)])
 	}
 	
 	def indexDone(int userId) {
 		def user = User.get(userId)
 		render(template: 'index', model: [tasks: Task.completed.recent(3).forUser(user).list(),
-			tasksType: 'completedTasks', user: user])
+			tasksType: 'completedTasks', user: user, dtTrend: dailyTaskTrend(user)])
 	}
 	
 	def indexCategory(int userId, int categoryId) {
 		def user = User.get(userId)
-		render(template: 'index', model: [user: user, tasks:
+		render(template: 'index', model: [user: user, showCompletedGreen: true, tasks:
 			Task.forUser(user).inCategory(Category.get(categoryId)).list(
 				[sort: 'dueDate', order: 'desc', max:20])])
 	}	
@@ -51,7 +60,12 @@ class TaskController {
 		Task task = new Task(params)
 		if (!task.save())
 			log.info("Task ${task.properties} not saved because of:\n${task.errors}")
-		redirect(controller: 'user', action: 'show', id: params.user)
+			
+		def referer =  request.getHeader('referer')
+		if (referer)
+			redirect(url: referer)
+		else	
+			redirect(controller: 'user', action: 'show', id: params.user)
 	}
 	
 	def delete(int id) {
@@ -110,7 +124,7 @@ class TaskController {
 	
 	def recentForCategory(int userId, int categoryId) {
 		def tasks = Task.inCategory(Category.get(categoryId)).forUser(User.get(userId)).
-			list(sort: 'id', order: 'desc', max: 3)
+			list(sort: 'id', order: 'desc', max: 6)
 		
 		render(template:'recentForCategory', model:	[recent: tasks])
 	}

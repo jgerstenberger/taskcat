@@ -19,6 +19,7 @@
 		<div class="container">
 			<sec:ifAnyGranted roles="ROLE_ADMIN">
 				<g:include controller="task" action="create" />
+				<g:include controller="dailyTask" action="create" />
 			</sec:ifAnyGranted>
 			<g:layoutBody/>
 		</div>
