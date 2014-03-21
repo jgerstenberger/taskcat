@@ -17,6 +17,10 @@
 			<g:submitButton name="Save" class="btn btn-primary"/>
 			<button id="editTaskCancel" class="btn btn-default">Cancel</button>
 			<button id="editTaskDelete" class="btn btn-danger">Delete</button>
+
+			<g:if test="${task.dailyTask}">
+				<g:link controller="dailyTask" action="edit" params="[id:task.dailyTask.id]">Go to Daily Task</g:link>
+			</g:if>
 		</g:form>
 		<g:form name="deleteTaskForm" action="delete">
 			<g:hiddenField name="id" value="${task.id}"/>

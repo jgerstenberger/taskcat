@@ -52,6 +52,6 @@ function updateDescriptionHelperLinks(select) {
 function bindDescriptionHelperLinks() {
 	$(".descriptionHelperBtn").click(function() {
 		var btn = $(this);
-		$('#description').val(btn.html());
+		$('#description').val(btn.text());
 	});
 }

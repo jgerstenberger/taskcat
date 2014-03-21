@@ -28,8 +28,8 @@ class TaskService {
 		}.collect { dt ->
 			(dt.instancesThru.plusDays(1)..today).collect() { date ->
 				if (!dt.excludedDays.contains(date.dayOfWeek))
-				new Task(user: theUser, dailyTask: dt, dueDate: date,
-					description: dt.description, category: dt.category)
+					new Task(user: theUser, dailyTask: dt, dueDate: date,
+						description: dt.description, category: dt.category)
 			}
 		}.flatten() - null)
 		

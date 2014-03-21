@@ -17,7 +17,7 @@ class TaskController {
 	def dailyTaskTrend(user) {
 		def statMap = [(TaskStatus.MISSED): -1, (TaskStatus.NOT_DONE): 0, (TaskStatus.DONE): 1]
 		user.dailyTasks.collectEntries { dt ->
-			[(dt): Task.findAllByDailyTask(dt, [sort: 'dueDate', order:'desc', max:14])*.status.
+			[(dt.id): Task.findAllByDailyTask(dt, [sort: 'dueDate', order:'desc', max:14])*.status.
 				collect{statMap[it]}.reverse()]
 		}
 	}
@@ -93,12 +93,14 @@ class TaskController {
 				log.info("Task ${task.properties} not saved because of:\n${task.errors}")
 			
 			if (task.dailyTask.instancesThru) {
-				(task.dailyTask.instancesThru.plusDays(1)..<task.dueDate).each {
-					Task fillInTask = new Task(task.properties)
-					fillInTask.status = TaskStatus.NOT_DONE
-					fillInTask.dueDate = it
-					if (!fillInTask.save())
-						log.info("Task ${fillInTask.properties} not saved because of:\n${fillInTask.errors}")
+				(task.dailyTask.instancesThru.plusDays(1)..<task.dueDate).each { day ->
+					if (!task.dailyTask.excludedDays.contains(day.dayOfWeek)) {
+						Task fillInTask = new Task(task.properties)
+						fillInTask.status = TaskStatus.NOT_DONE
+						fillInTask.dueDate = day
+						if (!fillInTask.save())
+							log.info("Task ${fillInTask.properties} not saved because of:\n${fillInTask.errors}")
+					}
 				}
 			}
 			

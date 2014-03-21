@@ -7,6 +7,20 @@ class DailyTaskController {
 
     def index() { }
 	
+	def edit(int id) {
+		def dailyTask = DailyTask.get(id)
+		println "ed=" + dailyTask.excludedDays
+		[dailyTask: dailyTask, categories: Category.all, user: dailyTask.user]
+	}
+	
+	def update() {
+		def dt = DailyTask.get(params.id)
+		dt.properties = params
+		if (!dt.save())
+			log.info("DailyTask ${dt.properties} not saved because of:\n${dt.errors}")
+		redirect(controller: 'user', action: 'show', id: dt.user.id)
+	}
+	
 	def save() {
 		DailyTask dTask = new DailyTask(params)
 		dTask.user = User.get(params.userId)

@@ -23,7 +23,7 @@
 			<td>
 				<g:if test="${task.isDailyTaskType()}"><span class="glyphicon glyphicon-repeat"></span> </g:if>${task.description}
 				<g:if test="${task.isDailyTaskType()}">
-					<span class="sparklines-tristate id="dstl-${task.id}" values="${dtTrend[task.dailyTask]?.join(',')}"></span>
+					<span class="sparklines-tristate id="dstl-${task.id}" values="${dtTrend[task.dailyTask.id]?.join(',')}"></span>
 				</g:if>
 			</td>
 			<td>
