@@ -1,6 +1,9 @@
 <r:require module="taskUpdate"/>
 <r:require module="taskIndex"/>
 <html>
+	<head>
+		<meta http-equiv="refresh" content="3600">
+	</head>
 	<body>
 		<div class="panel panel-primary">
 			<div class="panel-heading">

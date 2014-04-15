@@ -11,6 +11,7 @@
 		<script>
 			var userId = ${user.id};
 		</script>
+		<g:layoutHead/>
 	</head>
 	<body>
 		<sec:ifAnyGranted roles="ROLE_ADMIN">
