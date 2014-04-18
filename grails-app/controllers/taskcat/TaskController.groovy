@@ -37,8 +37,8 @@ class TaskController {
 	
 	def indexCategory(int userId, int categoryId) {
 		def user = User.get(userId)
-		render(template: 'index', model: [user: user, showCompletedGreen: true, tasks:
-			Task.forUser(user).inCategory(Category.get(categoryId)).list(
+		render(template: 'index', model: [user: user, showCompletedGreen: true, dtTrend: dailyTaskTrend(user),
+			tasksType: 'categoryTasks', tasks: Task.forUser(user).inCategory(Category.get(categoryId)).list(
 				[sort: 'dueDate', order: 'desc', max:20])])
 	}	
 	
