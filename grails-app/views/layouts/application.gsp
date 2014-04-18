@@ -14,9 +14,7 @@
 		<g:layoutHead/>
 	</head>
 	<body>
-		<sec:ifAnyGranted roles="ROLE_ADMIN">
-			<g:include controller="main" action="taskbar"/>
-		</sec:ifAnyGranted>
+		<g:include controller="main" action="taskbar"/>
 		<div class="container">
 			<sec:ifAnyGranted roles="ROLE_ADMIN">
 				<g:include controller="task" action="create" />
