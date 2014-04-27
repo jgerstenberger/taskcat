@@ -16,4 +16,12 @@ modules = {
 	sparklines {
 		resource url:'js/jquery.sparkline.min.js'
 	}
+	fullcalendar {
+		resource url:'js/fullcalendar.min.js'
+		resource url:'css/fullcalendar.css'
+	}
+	calendar {
+		dependsOn 'fullcalendar'
+		resource url:'js/cal.js'
+	}
 }
