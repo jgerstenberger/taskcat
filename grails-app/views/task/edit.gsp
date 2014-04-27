@@ -17,6 +17,7 @@
 			<g:submitButton name="Save" class="btn btn-primary"/>
 			<button id="editTaskCancel" class="btn btn-default">Cancel</button>
 			<button id="editTaskDelete" class="btn btn-danger">Delete</button>
+			<button id="editTaskDelay" class="btn btn-warning">Delay Series</button>
 
 			<g:if test="${task.dailyTask}">
 				<g:link controller="dailyTask" action="edit" params="[id:task.dailyTask.id]">Go to Daily Task</g:link>
@@ -25,7 +26,11 @@
 		<g:form name="deleteTaskForm" action="delete">
 			<g:hiddenField name="id" value="${task.id}"/>
 		</g:form>
+		<g:form name="delayTaskForm" action="delay">
+			<g:hiddenField name="id" value="${task.id}"/>
+		</g:form>
 	</div>
+
 	<g:if test="${!otherUsers.empty}">
 		<div class="panel panel-primary" id="copyTaskPanel">
 			<div class="panel-heading">

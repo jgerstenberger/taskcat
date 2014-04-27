@@ -69,10 +69,24 @@ class TaskController {
 	}
 	
 	def delete(int id) {
-		println 'delete'
 		Task task = Task.get(id)
 		User user = task.user
 		task.delete()
+		redirect(controller: 'user', action: 'show', id: user.id)
+	}
+	
+	def delay(int id) {
+		Task task = Task.get(id)
+		User user = task.user
+		
+		if (task.category) {
+			def tasks = Task.inCategory(task.category).findAllByDueDateGreaterThanEquals(task.dueDate)
+			tasks.each {
+				it.dueDate = it.dueDate.plusDays(1)
+				it.save()
+			}
+		}
+
 		redirect(controller: 'user', action: 'show', id: user.id)
 	}
 	

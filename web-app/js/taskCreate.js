@@ -27,7 +27,12 @@ $(function() {
 		$('form#deleteTaskForm').submit();
 		return false;
 	});
-	
+
+	$("#editTaskDelay").click(function() {
+		$('form#delayTaskForm').submit();
+		return false;
+	});
+
 	var categorySelect = $("#createTaskPanel #category");
 	categorySelect.change(function() {
 		updateDescriptionHelperLinks($(this));
