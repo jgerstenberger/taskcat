@@ -10,7 +10,7 @@ class DailyTaskController {
 	def edit(int id) {
 		def dailyTask = DailyTask.get(id)
 		println "ed=" + dailyTask.excludedDays
-		[dailyTask: dailyTask, categories: Category.all, user: dailyTask.user]
+		[dailyTask: dailyTask, categories: Category.list(), user: dailyTask.user]
 	}
 	
 	def update() {
@@ -30,6 +30,8 @@ class DailyTaskController {
 	}
 	
 	def create() {
-		render(template:'create', model:[dailyTask:new DailyTask()])
+		def dailyTask = new DailyTask()
+		dailyTask.user = request.getAttribute("user")
+		render(template:'create', model:[dailyTask:dailyTask, categories: Category.list()])
 	}
 }

@@ -8,7 +8,7 @@ class UserController {
 	def TaskService taskService
 	
     def index() {
-		[users: User.all]
+		[users: User.list()]
 	}
 	
 	def show() {

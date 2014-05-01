@@ -45,7 +45,7 @@ class TaskController {
 	def edit() {
 		def task = Task.get(params.id)
 		def otherUsers = User.findAllByIdNotEqual(task.user.id)
-		[user: task.user, task: task, categories: Category.all, otherUsers: otherUsers]
+		[user: task.user, task: task, categories: Category.list(), otherUsers: otherUsers]
 	}
 	
 	def update() {
@@ -80,7 +80,7 @@ class TaskController {
 		User user = task.user
 		
 		if (task.category) {
-			def tasks = Task.inCategory(task.category).findAllByDueDateGreaterThanEquals(task.dueDate)
+			def tasks = Task.forUser(user).inCategory(task.category).findAllByDueDateGreaterThanEquals(task.dueDate)
 			tasks.each {
 				it.dueDate = it.dueDate.plusDays(1)
 				it.save()
@@ -90,9 +90,9 @@ class TaskController {
 		redirect(controller: 'user', action: 'show', id: user.id)
 	}
 	
-	def updateStatus() {
-		if (!params.id.isEmpty()) {
-			Task task = Task.get(params.id)
+	def updateStatus(Integer id) {
+		if (id) {
+			Task task = Task.get(id)
 			task.status = params.status
 			if (!task.save())
 				log.info("Task ${task.properties} not saved because of:\n${task.errors}")
@@ -153,6 +153,6 @@ class TaskController {
 		if (category)
 			task.category = category
 		
-		render(template:'create', model:[categories: Category.all, task: task])
+		render(template:'create', model:[categories: Category.list(), task: task])
 	}
 }

@@ -6,6 +6,7 @@ class Category {
 	
 	static hasMany = [tasks: Task]
 	
-    static constraints = {
+    static mapping = {
+		sort 'name'
     }
 }
