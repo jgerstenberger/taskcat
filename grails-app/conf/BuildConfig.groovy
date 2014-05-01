@@ -81,5 +81,8 @@ grails.project.dependency.resolution = {
 		compile ":quartz:1.0.1"
 		compile ":mail:1.0.1"
 		compile ":searchable:0.6.6"
+		compile ":newrelic:1.0-2.18.0"
+		compile ":fullcalendar:1.6.4"
+		compile ":jquery-sparklines:2.1.2"
 	}
 }

@@ -3,6 +3,7 @@
 	<head>
 		<base href="${request.contextPath}"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<newrelic:browserTimingHeader/>
 		<link rel="apple-touch-icon-precomposed" href="${resource(file: 'apple-touch-icon.png')}" />
 		<title><g:layoutTitle default="TaskCat"/></title>
 		<r:require modules="bootstrap"/>
@@ -23,5 +24,6 @@
 			<g:layoutBody/>
 		</div>
 		<r:layoutResources/>
+		<newrelic:browserTimingFooter/>
 	</body>
 </html>
