@@ -8,6 +8,7 @@
 	<g:each var="task" in="${tasks}">
 		<g:set var="colorClass">
 			<g:if test="${task.isPastDue()}">danger</g:if>
+			<g:elseif test="${task.isNotConfirmed()}">warning</g:elseif>
 			<g:elseif test="${showCompletedGreen && task.isCompleted()}">success</g:elseif>
 			<g:elseif test="${task.isDueTodayAndNotDone()}">info</g:elseif>
 		</g:set>
@@ -34,10 +35,11 @@
 	</g:each>
 </table>
 
-<div class="visible-xs">
+<div class="visible-xs" id="${tasksType}-xs">
 	<g:each var="task" in="${tasks}">
 		<g:set var="colorClass">
 			<g:if test="${task.isPastDue()}">label-danger</g:if>
+			<g:elseif test="${task.isNotConfirmed()}">label-warning</g:elseif>
 			<g:elseif test="${showCompletedGreen && task.isCompleted()}">label-success</g:elseif>
 			<g:elseif test="${task.isDueTodayAndNotDone()}">label-info</g:elseif>
 			<g:else>label-default</g:else>

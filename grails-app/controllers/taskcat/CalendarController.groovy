@@ -25,6 +25,8 @@ class CalendarController {
 				color = '#00f'
 			} else if (it.isCompleted()) {
 				color = '#0f0'
+			} else if (it.isNotConfirmed()) {
+				color = '#ff0'
 			} else if (it.isDailyTaskType() && it.status == TaskStatus.MISSED) {
 				color = '#f00'
 			}

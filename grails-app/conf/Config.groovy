@@ -114,7 +114,7 @@ log4j = {
            'org.hibernate',
            'net.sf.ehcache.hibernate'
 		   
-	debug 'taskcat'
+	warn 'taskcat', 'grails.app.controllers.taskcat.TaskController'
 }
 
 
@@ -143,6 +143,8 @@ grails.plugin.springsecurity.openid.registration.requiredAttributes = [
 	axNamePersonLast: 'http://axschema.org/namePerson/last']
 
 grails.plugin.springsecurity.openid.registration.optionalAttributes = []
+
+grails.plugin.springsecurity.openid.registration.roleNames = ['ROLE_USER']
 
 grails.plugin.springsecurity.auth.loginFormUrl =
 	"/j_spring_openid_security_check?_spring_security_remember_me=1" +

@@ -4,12 +4,9 @@ import grails.plugin.springsecurity.annotation.Secured
 
 @Secured(['ROLE_USER'])
 class DailyTaskController {
-
-    def index() { }
 	
 	def edit(int id) {
 		def dailyTask = DailyTask.get(id)
-		println "ed=" + dailyTask.excludedDays
 		[dailyTask: dailyTask, categories: Category.list(), user: dailyTask.user]
 	}
 	

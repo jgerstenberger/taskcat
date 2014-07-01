@@ -12,6 +12,7 @@ function bindUpdateTaskButtons() {
 					dueDate: b.data('due-date'), status: b.data('status'), userId: userId}, function() {
 			if ($("#currentTasks").length > 0) {
 				$.get($('head base').attr('href') + '/task?status=NOT_DONE&userId=' + userId, function(data){
+					$("#currentTasks-xs").remove();
 					$("#currentTasks").replaceWith(data);				
 					bindUpdateTaskButtons();
 					initSparklines();
@@ -19,6 +20,7 @@ function bindUpdateTaskButtons() {
 			}
 			if ($("#currentTasks").length > 0) {
 				$.get($('head base').attr('href') + '/task?status=DONE&userId=' + userId, function(data){
+					$("#completedTasks-xs").remove();
 					$("#completedTasks").replaceWith(data);				
 					initSparklines();
 				});
@@ -26,6 +28,7 @@ function bindUpdateTaskButtons() {
 			if ($("#categoryTasks").length > 0) {
 				$.get($('head base').attr('href') + '/task/indexCategory?userId=' + userId + '&categoryId=' + categoryId, 
 					function(data){
+						$("#categoryTasks-xs").remove();
 						$("#categoryTasks").replaceWith(data);				
 						bindUpdateTaskButtons();
 						initSparklines();

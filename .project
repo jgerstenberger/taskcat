@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>taskcat</name>
+	<name>tasksquire</name>
 	<comment></comment>
 	<projects>
 	</projects>
@@ -26,7 +26,7 @@
 		<link>
 			<name>.link_to_grails_plugins</name>
 			<type>2</type>
-			<location>/Users/jgerstenberger/Documents/workspace-ggts-3.4.0.RELEASE/taskcat/target/work/plugins</location>
+			<locationURI>PROJECT_LOC/target/work/plugins</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

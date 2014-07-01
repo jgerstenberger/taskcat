@@ -84,5 +84,7 @@ grails.project.dependency.resolution = {
 		compile ":newrelic:1.0-2.18.0"
 		compile ":fullcalendar:1.6.4"
 		compile ":jquery-sparklines:2.1.2"
+		
+		test ':code-coverage:1.2.7'
 	}
 }

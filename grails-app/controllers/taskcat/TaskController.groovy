@@ -1,7 +1,10 @@
 package taskcat
 
+import grails.plugin.springsecurity.SpringSecurityUtils;
 import grails.plugin.springsecurity.annotation.Secured
+
 import org.joda.time.LocalDate
+
 import taskcat.TaskStatus
 
 @Secured(['ROLE_USER'])
@@ -15,7 +18,8 @@ class TaskController {
 	}
 	
 	def dailyTaskTrend(user) {
-		def statMap = [(TaskStatus.MISSED): -1, (TaskStatus.NOT_DONE): 0, (TaskStatus.DONE): 1]
+		def statMap = [(TaskStatus.MISSED): -1, (TaskStatus.NOT_DONE): 0, (TaskStatus.DONE): 1,
+			(TaskStatus.NOT_CONFIRMED): 0]
 		user.dailyTasks.collectEntries { dt ->
 			[(dt.id): Task.findAllByDailyTask(dt, [sort: 'dueDate', order:'desc', max:14])*.status.
 				collect{statMap[it]}.reverse()]
@@ -42,12 +46,14 @@ class TaskController {
 				[sort: 'dueDate', order: 'desc', max:20])])
 	}	
 	
+	@Secured(['ROLE_ADMIN'])
 	def edit() {
 		def task = Task.get(params.id)
 		def otherUsers = User.findAllByIdNotEqual(task.user.id)
 		[user: task.user, task: task, categories: Category.list(), otherUsers: otherUsers]
 	}
 	
+	@Secured(['ROLE_ADMIN'])
 	def update() {
 		def task = Task.get(params.id)
 		task.properties = params
@@ -56,6 +62,7 @@ class TaskController {
 		redirect(controller: 'user', action: 'show', id: task.user.id)
 	}
 	
+	@Secured(['ROLE_ADMIN'])
 	def save() {
 		Task task = new Task(params)
 		if (!task.save())
@@ -68,6 +75,7 @@ class TaskController {
 			redirect(controller: 'user', action: 'show', id: params.user)
 	}
 	
+	@Secured(['ROLE_ADMIN'])
 	def delete(int id) {
 		Task task = Task.get(id)
 		User user = task.user
@@ -75,6 +83,7 @@ class TaskController {
 		redirect(controller: 'user', action: 'show', id: user.id)
 	}
 	
+	@Secured(['ROLE_ADMIN'])
 	def delay(int id) {
 		Task task = Task.get(id)
 		User user = task.user
@@ -93,36 +102,16 @@ class TaskController {
 	def updateStatus(Integer id) {
 		if (id) {
 			Task task = Task.get(id)
+			if (SpringSecurityUtils.ifNotGranted("ROLE_ADMIN") && task.requiresConfirmation &&
+				task.status == TaskStatus.NOT_CONFIRMED && status == TaskStatus.DONE) {
+				throw AccessDeniedException("Can't confirm this task")
+			}
 			task.status = params.status
 			if (!task.save())
-				log.info("Task ${task.properties} not saved because of:\n${task.errors}")
+				log.warn("Task ${task.properties} not saved because of:\n${task.errors}")
 		} else {
-			Task task = new Task(params)
-			task.dailyTask = DailyTask.get(params.dailyTaskId)
-			task.description = task.dailyTask.description
-			task.user = User.get(params.userId)
-			task.category = task.dailyTask.category
-			task.statusChangeDate = new LocalDate()
-			if (!task.save())
-				log.info("Task ${task.properties} not saved because of:\n${task.errors}")
-			
-			if (task.dailyTask.instancesThru) {
-				(task.dailyTask.instancesThru.plusDays(1)..<task.dueDate).each { day ->
-					if (!task.dailyTask.excludedDays.contains(day.dayOfWeek)) {
-						Task fillInTask = new Task(task.properties)
-						fillInTask.status = TaskStatus.NOT_DONE
-						fillInTask.dueDate = day
-						if (!fillInTask.save())
-							log.info("Task ${fillInTask.properties} not saved because of:\n${fillInTask.errors}")
-					}
-				}
-			}
-			
-			if (!task.dailyTask.instancesThru || task.dailyTask.instancesThru < task.dueDate) {
-				task.dailyTask.instancesThru = task.dueDate
-				if (!task.dailyTask.save())
-					log.info("Task ${task.dailyTask.properties} not saved because of:\n${task.dailyTask.errors}")
-			}
+			taskService.persistDailyTaskInstanceWithStatus(
+				params.dailyTaskId, params.dueDate, params.status)
 		}
 		
 		render 'ok'

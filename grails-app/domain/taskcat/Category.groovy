@@ -3,6 +3,7 @@ package taskcat
 class Category {
 
 	String name
+	boolean requiresConfirmation
 	
 	static hasMany = [tasks: Task]
 	

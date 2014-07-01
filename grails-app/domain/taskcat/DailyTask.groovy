@@ -6,6 +6,7 @@ import org.jadira.usertype.dateandtime.joda.PersistentLocalDate;
 class DailyTask {
 	String description = ''
 	LocalDate instancesThru
+	boolean requiresConfirmation
 	
 	static belongsTo = [user: User, category: Category]
 	static hasMany = [tasks: Task, excludedDays: Integer]
@@ -16,6 +17,5 @@ class DailyTask {
     }
 	
 	static mapping = {
-//		instancesThru type:PersistentLocalDate
 	}
 }
