@@ -7,8 +7,8 @@
 	</tr>
 	<g:each var="task" in="${tasks}">
 		<g:set var="colorClass">
-			<g:if test="${task.isPastDue()}">danger</g:if>
-			<g:elseif test="${task.isNotConfirmed()}">warning</g:elseif>
+			<g:if test="${task.isNotConfirmed()}">warning</g:if>
+			<g:elseif test="${task.isPastDue()}">danger</g:elseif>
 			<g:elseif test="${showCompletedGreen && task.isCompleted()}">success</g:elseif>
 			<g:elseif test="${task.isDueTodayAndNotDone()}">info</g:elseif>
 		</g:set>

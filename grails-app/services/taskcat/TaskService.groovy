@@ -63,13 +63,13 @@ class TaskService {
 	
 	def persistDailyTaskInstanceWithStatus(dailyTaskId, dueDate, status) {
 		def dailyTask = DailyTask.get(dailyTaskId)
-		if (SpringSecurityUtils.ifNotGranted("ROLE_ADMIN") && DailyTask.requiresConfirmation &&
+		if (SpringSecurityUtils.ifNotGranted("ROLE_ADMIN") && dailyTask.requiresConfirmation &&
 			status == TaskStatus.DONE) {
 			throw AccessDeniedException("Can't confirm this task")
 		}
 		
-		Task task = newTaskFromDailyTask(dailyTask: dailyTask,
-			dueDate: dueDate, status: status)
+		Task task = newTaskFromDailyTask(dailyTask: dailyTask, dueDate: dueDate)
+		task.status = status
 		task.statusChangeDate = new LocalDate()
 		if (!task.save())
 			log.warn("Task ${task.properties} not saved because of:\n${task.errors}")
