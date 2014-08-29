@@ -41,7 +41,7 @@ class TaskService {
 	def recentTasksInCategories(User theUser, int days) {
 		def tasks = Task.findAll(sort:'dueDate') {
 			user == theUser &&
-			dueDate > new LocalDate().minusDays(days)
+			dueDate > new LocalDate(theUser.timeZone()).minusDays(days)
 		}
 		
 		def categoryMap = [:].withDefault {[]}

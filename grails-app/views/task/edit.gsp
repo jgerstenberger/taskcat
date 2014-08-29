@@ -13,11 +13,6 @@
 				<g:select from="${taskcat.TaskStatus.values()}" optionKey="name" optionValue="label" class="form-control" name="status" value="${task.status.getName()}"/>
 			</div>
 			
-			<div class="form-group">
-				<label for="requiresConfirmation">Requires Confirmation</label>
-				<g:checkBox name="requiresConfirmation" value="${task.requiresConfirmation}"/>
-			</div>
-
 			<g:hiddenField name="id" value="${task.id}"/>
 			<g:submitButton name="Save" class="btn btn-primary"/>
 			<button id="editTaskCancel" class="btn btn-default">Cancel</button>

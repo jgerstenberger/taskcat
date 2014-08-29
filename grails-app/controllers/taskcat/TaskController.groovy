@@ -35,7 +35,7 @@ class TaskController {
 	
 	def indexDone(int userId) {
 		def user = User.get(userId)
-		render(template: 'index', model: [tasks: Task.completed.recent(3).forUser(user).list(),
+		render(template: 'index', model: [tasks: Task.completed.recent(3, user).forUser(user).list(),
 			tasksType: 'completedTasks', user: user, dtTrend: dailyTaskTrend(user)])
 	}
 	

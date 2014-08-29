@@ -17,7 +17,7 @@ class HumanDateTagLib {
 	
 	def humanDate = { attrs, body ->
 //		println Days.daysBetween(new LocalDate(), attrs.date);
-		out << daysToString(Days.daysBetween(new LocalDate(), attrs.date).getDays())
+		out << daysToString(Days.daysBetween(new LocalDate(attrs.timeZone), attrs.date).getDays())
 	}
 	
 	def daysToString(int days) {
@@ -33,6 +33,6 @@ class HumanDateTagLib {
 	}
 	
 	def humanDayOfWeek = { attrs, body ->
-		out << dt.print(new LocalDate().withDayOfWeek(Integer.valueOf(attrs['dayOfWeek'])))
+		out << dt.print(new LocalDate(attrs['timeZone']).withDayOfWeek(Integer.valueOf(attrs['dayOfWeek'])))
 	}
 }

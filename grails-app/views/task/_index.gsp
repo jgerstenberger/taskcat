@@ -22,13 +22,15 @@
 				</g:if>
 			</td>
 			<td>
-				<g:if test="${task.isDailyTaskType()}"><span class="glyphicon glyphicon-repeat"></span> </g:if>${task.description}
+				<g:if test="${task.isDailyTaskType()}"><span class="glyphicon glyphicon-repeat"></span> </g:if>
+				<g:if test="${task.requiresConfirmation}"><span class="glyphicon glyphicon-search"></span> </g:if>
+				${task.description}
 				<g:if test="${task.isDailyTaskType()}">
 					<span class="sparklines-tristate id="dstl-${task.id}" values="${dtTrend[task.dailyTask.id]?.join(',')}"></span>
 				</g:if>
 			</td>
 			<td>
-				<div>${humanDate(date: task.dueDate)}</div>
+				<div>${humanDate(date: task.dueDate, timeZone: user.timeZone())}</div>
 				<div class="date-fine-print"><g:formatDate date="${task.dueDate.toDate()}" format="EEE (yyyy-MM-dd)"/></div>
 			</td>
 		</tr>

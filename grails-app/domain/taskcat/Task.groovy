@@ -22,26 +22,27 @@ class Task {
 		completed {	eq 'status', TaskStatus.DONE }
 		forUser { user -> eq 'user', user }
 		inCategory { category -> eq 'category', category }
-		recent { days ->
-			gt 'dueDate', new LocalDate().minusDays(days)
+		recent { days, user -> 
+			gt 'dueDate', new LocalDate(user.timeZone()).minusDays(days)
 		}		
 	}
 		
 	def beforeUpdate() {
 		if (isDirty('status'))
-			statusChangeDate = new LocalDate()
+			statusChangeDate = new LocalDate(user.timeZone())
 	}
 		
 	boolean isPastDue() {
 		(status == TaskStatus.NOT_DONE || status == TaskStatus.NOT_CONFIRMED) && 
-			dueDate < new LocalDate()
+			dueDate < new LocalDate(user.timeZone())
 	}
 	
 	boolean isPastDailyTask()	{dailyTask && isPastDue()}
 	boolean isNotConfirmed()	{status == TaskStatus.NOT_CONFIRMED}
-	boolean isDueTodayAndNotDone() {status == TaskStatus.NOT_DONE && dueDate == new LocalDate()}
+	boolean isDueTodayAndNotDone() {status == TaskStatus.NOT_DONE && dueDate == new LocalDate(user.timeZone())}
 	boolean isNotDone()			{status == TaskStatus.NOT_DONE}
 	boolean isCompletedLate()	{status == TaskStatus.DONE && statusChangeDate > dueDate}
 	boolean isCompleted()		{status == TaskStatus.DONE}
 	boolean isDailyTaskType()	{dailyTask != null}
+//	boolean isRequiresConfirmation()	{dailyTask != null}
 }

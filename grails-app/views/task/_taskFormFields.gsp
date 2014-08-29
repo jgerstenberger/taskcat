@@ -11,3 +11,7 @@
 	<label for="dueDate">Due Date</label>
 	<g:textField data-provide="datepicker" data-date-format="yyyy-mm-dd" class="form-control" name="dueDate" id="dueDate" value="${task.dueDate ?: ''}"/>
 </div>
+<div class="form-group">
+	<label for="requiresConfirmation">Requires Confirmation</label>
+	<g:checkBox name="requiresConfirmation" value="${task.requiresConfirmation}"/>
+</div>

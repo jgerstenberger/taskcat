@@ -1,5 +1,7 @@
 package taskcat
 
+import org.joda.time.DateTimeZone;
+
 class User {
 
 	transient springSecurityService
@@ -11,6 +13,7 @@ class User {
 	boolean accountExpired
 	boolean accountLocked
 	boolean passwordExpired
+	protected String timeZone = "America/New_York"
 	
 	static hasMany = [openIds: OpenID, tasks: Task, dailyTasks: DailyTask]
 
@@ -36,6 +39,10 @@ class User {
 //		if (isDirty('password')) {
 //			encodePassword()
 //		}
+	}
+	
+	DateTimeZone timeZone() {
+		DateTimeZone.forID(timeZone);
 	}
 
 //	protected void encodePassword() {
