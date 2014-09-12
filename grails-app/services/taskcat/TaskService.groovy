@@ -16,8 +16,8 @@ class TaskService {
 			(status == TaskStatus.NOT_DONE || status == TaskStatus.NOT_CONFIRMED)
 		}
 		
-		def dailyTasks = theUser.dailyTasks
-		def today = new LocalDate()
+		def dailyTasks = theUser.dailyTasks.findAll{ it.active }
+		def today = new LocalDate(theUser.timeZone())
 		def dayOfWeekToday = today.dayOfWeek
 		
 		tasks.addAll(dailyTasks.findAll {
@@ -70,7 +70,7 @@ class TaskService {
 		
 		Task task = newTaskFromDailyTask(dailyTask: dailyTask, dueDate: dueDate)
 		task.status = status
-		task.statusChangeDate = new LocalDate()
+		task.statusChangeDate = new LocalDate(dailyTask.user.timeZone())
 		if (!task.save())
 			log.warn("Task ${task.properties} not saved because of:\n${task.errors}")
 			

@@ -18,3 +18,7 @@
 		</div>
 	</g:each>
 </div>
+<div class="form-group">
+	<label for="active">Active</label>
+	<g:checkBox name="active" value="${dailyTask.active}"/>
+</div>

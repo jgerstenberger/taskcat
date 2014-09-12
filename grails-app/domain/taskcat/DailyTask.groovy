@@ -7,6 +7,7 @@ class DailyTask {
 	String description = ''
 	LocalDate instancesThru
 	boolean requiresConfirmation
+	boolean active = true
 	
 	static belongsTo = [user: User, category: Category]
 	static hasMany = [tasks: Task, excludedDays: Integer]
