@@ -19,6 +19,10 @@
 	</g:each>
 </div>
 <div class="form-group">
+	<label for="requiresConfirmation">Requires Confirmation</label>
+	<g:checkBox name="requiresConfirmation" value="${dailyTask.requiresConfirmation}"/>
+</div>
+<div class="form-group">
 	<label for="active">Active</label>
 	<g:checkBox name="active" value="${dailyTask.active}"/>
 </div>
