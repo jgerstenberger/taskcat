@@ -86,11 +86,12 @@ grails.hibernate.cache.queries = false
 environments {
     development {
         grails.logging.jul.usebridge = true
+		grails.serverURL = "http://taskcat.example.com:8080/taskcat"
     }
     production {
         grails.logging.jul.usebridge = false
 		grails.dbconsole.enabled = true
-        // TODO: grails.serverURL = "http://www.changeme.com"
+        grails.serverURL = "http://taskcat.gerstenberger.name"
     }
 }
 
@@ -123,40 +124,40 @@ grails.plugin.springsecurity.userLookup.userDomainClassName = 'taskcat.User'
 grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'taskcat.UserRole'
 grails.plugin.springsecurity.authority.className = 'taskcat.Role'
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
-	'/':                              ['permitAll'],
-	'/index':                         ['permitAll'],
-	'/index.gsp':                     ['permitAll'],
 	'/**/js/**':                      ['permitAll'],
 	'/**/css/**':                     ['permitAll'],
 	'/**/images/**':                  ['permitAll'],
-	'/**/favicon.ico':                ['permitAll']
+	'/**/favicon.ico':                ['permitAll'],
+	'/springSecurityOAuth/**':        ['permitAll'],
+	'/oauth/**':        ['permitAll'],
+	'/dbconsole/**': ['permitAll']
 ]
+
+//grails.plugin.springsecurity.securityConfigType = "InterceptUrlMap"
+//grails.plugin.springsecurity.interceptUrlMap = [
+//	'/':                ['permitAll'],
+//	'/index':           ['permitAll'],
+//	'/index.gsp':       ['permitAll'],
+//	'/**/js/**':        ['permitAll'],
+//	'/**/css/**':       ['permitAll'],
+//	'/**/images/**':    ['permitAll'],
+//	'/**/favicon.ico':  ['permitAll'],
+//	'/login/**':        ['permitAll'],
+//	'/logout/**':       ['permitAll'],
+//	'/oauth/**':        ['permitAll'],
+//	'/dbconsole/**': ['permitAll']
+//]
+
 
 grails.plugin.springsecurity.rememberMe.persistent = true
 grails.plugin.springsecurity.rememberMe.persistentToken.domainClassName = 'taskcat.PersistentLogin'
 
-grails.plugin.springsecurity.openid.domainClass = 'taskcat.OpenID'
-
-grails.plugin.springsecurity.openid.registration.requiredAttributes = [
-	axContactEmail: 'http://axschema.org/contact/email',
-	axNamePersonFirst: 'http://axschema.org/namePerson/first',
-	axNamePersonLast: 'http://axschema.org/namePerson/last']
-
-grails.plugin.springsecurity.openid.registration.optionalAttributes = []
-
-grails.plugin.springsecurity.openid.registration.roleNames = ['ROLE_USER']
-
 grails.plugin.springsecurity.auth.loginFormUrl =
-	"/j_spring_openid_security_check?_spring_security_remember_me=1" +
-	"&openid_identifier=" +	URLEncoder.encode('https://www.google.com/accounts/o8/id', 'UTF-8')
+	"/oauth/google/authenticate"
 
 grails.plugin.springsecurity.roleHierarchy = '''
    ROLE_ADMIN > ROLE_USER
 '''
-
-grails.plugin.springsecurity.controllerAnnotations.staticRules = [
-	'/dbconsole/**': ['ROLE_ADMIN']
-]
 
 // Added by the Joda-Time plugin:
 grails.gorm.default.mapping = {
@@ -185,3 +186,6 @@ grails {
 			"mail.smtp.socketFactory.fallback":"false"]
 	}
 }
+// Added by the Spring Security OAuth plugin:
+grails.plugin.springsecurity.oauth.domainClass = 'tasksquire.OAuthID'
+grails.plugin.springsecurity.oauth.registration.askToLinkOrCreateAccountUri = ''

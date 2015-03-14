@@ -75,7 +75,6 @@ grails.project.dependency.resolution = {
         //runtime ":yui-minify-resources:0.1.5"
 
 		runtime ':twitter-bootstrap:3.1.1'
-		compile ':spring-security-openid:2.0-RC2'
 		compile ":joda-time:1.4"
 		compile ":bootstrap-datepicker:0.11"
 		compile ":quartz:1.0.1"
@@ -84,7 +83,9 @@ grails.project.dependency.resolution = {
 		compile ":newrelic:1.0-2.18.0"
 		compile ":fullcalendar:1.6.4"
 		compile ":jquery-sparklines:2.1.2"
-		
+		compile ":spring-security-oauth:2.1.0-RC4"
+		compile ":spring-security-oauth-google:0.3.1"
+
 		test ':code-coverage:1.2.7'
 	}
 }

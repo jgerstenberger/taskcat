@@ -23,7 +23,7 @@ class TaskService {
 		tasks.addAll(dailyTasks.findAll {
 			!it.instancesThru && !it.excludedDays.contains(dayOfWeekToday)
 		}.collect{
-			newTaskFromDailyTask(it, dueDate: today)
+			newTaskFromDailyTask(dailyTask: it, dueDate: today)
 		})
 		
 		tasks.addAll(dailyTasks.findAll {
@@ -61,7 +61,7 @@ class TaskService {
 			requiresConfirmation: params.dailyTask.requiresConfirmation)
 	}
 	
-	def persistDailyTaskInstanceWithStatus(dailyTaskId, dueDate, status) {
+	Task persistDailyTaskInstanceWithStatus(dailyTaskId, dueDate, status) {
 		def dailyTask = DailyTask.get(dailyTaskId)
 		if (SpringSecurityUtils.ifNotGranted("ROLE_ADMIN") && dailyTask.requiresConfirmation &&
 			status == TaskStatus.DONE) {
@@ -91,5 +91,7 @@ class TaskService {
 			if (!task.dailyTask.save())
 				log.warn("Task ${task.dailyTask.properties} not saved because of:\n${task.dailyTask.errors}")
 		}
+		
+		return task
 	}
 }
