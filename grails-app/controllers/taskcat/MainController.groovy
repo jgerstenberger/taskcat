@@ -8,6 +8,9 @@ import grails.plugin.springsecurity.oauth.OAuthToken;
 class MainController {
 
 	def springSecurityService
+	def oauthService
+	
+	public static final String SPRING_SECURITY_OAUTH_TOKEN = 'springSecurityOAuthToken'
 	
     def index() {
 		redirect(controller: 'user', action: 'show', id: springSecurityService.getPrincipal().id)
