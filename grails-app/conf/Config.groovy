@@ -189,4 +189,4 @@ grails {
 }
 // Added by the Spring Security OAuth plugin:
 grails.plugin.springsecurity.oauth.domainClass = 'tasksquire.OAuthID'
-grails.plugin.springsecurity.oauth.registration.askToLinkOrCreateAccountUri = ''
+grails.plugin.springsecurity.oauth.registration.askToLinkOrCreateAccountUri = '/main/linkAccount'
