@@ -129,8 +129,9 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	'/**/images/**':                  ['permitAll'],
 	'/**/favicon.ico':                ['permitAll'],
 	'/springSecurityOAuth/**':        ['permitAll'],
-	'/oauth/**':        ['permitAll'],
-	'/dbconsole/**': ['permitAll']
+	'/oauth/**':                      ['permitAll'],
+	'/dbconsole/**':                  ['permitAll'],
+	'/main/linkAccount':              ['permitAll']
 ]
 
 //grails.plugin.springsecurity.securityConfigType = "InterceptUrlMap"
