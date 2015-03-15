@@ -1,5 +1,7 @@
 package taskcat
 
+import org.springframework.security.core.context.SecurityContextHolder;
+import grails.converters.JSON
 import grails.plugin.springsecurity.SpringSecurityUtils;
 import grails.plugin.springsecurity.annotation.Secured
 import grails.plugin.springsecurity.oauth.OAuthToken;
@@ -7,6 +9,7 @@ import grails.plugin.springsecurity.oauth.OAuthToken;
 @Secured(['ROLE_USER'])
 class MainController {
 
+	def springSecurityOAuthService
 	def springSecurityService
 	def oauthService
 	
