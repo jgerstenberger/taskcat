@@ -1,4 +1,4 @@
-package taskcat
+package tasksquire
 
 import grails.plugin.springsecurity.annotation.Secured;
 
