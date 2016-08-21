@@ -4,6 +4,7 @@ import java.time.temporal.ChronoUnit;
 import java.time.LocalDate
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoField;
 
 
 class CaseCategory {
@@ -17,7 +18,7 @@ class HumanDateTagLib {
 	
 	def humanDate = { attrs, body ->
 //		println Days.daysBetween(new LocalDate(), attrs.date);
-		out << daysToString(ChronoUnit.DAYS.between(new LocalDate(attrs.timeZone), attrs.date).getDays())
+		out << daysToString(ChronoUnit.DAYS.between(LocalDate.now(attrs.timeZone).atStartOfDay(), attrs.date).getDays())
 	}
 	
 	def daysToString(int days) {
@@ -33,6 +34,6 @@ class HumanDateTagLib {
 	}
 	
 	def humanDayOfWeek = { attrs, body ->
-		out << dt.print(new LocalDate(attrs['timeZone']).withDayOfWeek(Integer.valueOf(attrs['dayOfWeek'])))
+		out << dt.print(LocalDate.now().with(ChronoField.DAY_OF_WEEK, Integer.valueOf(attrs['dayOfWeek'])))
 	}
 }
