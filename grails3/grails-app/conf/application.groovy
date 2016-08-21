@@ -25,10 +25,9 @@ grails.plugin.springsecurity.filterChain.chainMap = [
 	[pattern: '/**',             filters: 'JOINED_FILTERS']
 ]
 
-/*grails.plugin.springsecurity.roleHierarchy = '''
+grails.plugin.springsecurity.roleHierarchy = '''
    ROLE_ADMIN > ROLE_USER
 '''
-*/
 
 // Added by the Spring Security OAuth2 Google Plugin:
 grails.plugin.springsecurity.oauth2.domainClass = 'tasksquire.OAuthID'
