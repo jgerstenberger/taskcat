@@ -7,7 +7,10 @@
 //
 //= require jquery-2.2.0.min
 //= require bootstrap
-//= require_tree .
+//= require taskCreate
+//= require taskIndex
+//= require taskUpdate
+//= require cal
 //= require_self
 
 if (typeof jQuery !== 'undefined') {

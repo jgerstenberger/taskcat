@@ -124,3 +124,14 @@ grails:
 endpoints:
     jmx:
         unique-names: true
+---
+grails:
+    plugin:
+        springsecurity:
+            oauth2:
+                providers:
+                    google:
+                        api_key: '${API_KEY}'
+                        api_secret: ${API_SECRET}
+                        successUri: "/oauth2/google/success?_spring_security_remember_me=true"
+                        scopes: "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email"

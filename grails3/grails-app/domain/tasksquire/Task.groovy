@@ -19,33 +19,33 @@ class Task {
 		category(nullable: true)
     }
 
-	static namedQueries = {
+/*	static namedQueries = {
 		completed {	eq 'status', TaskStatus.DONE }
-		forUser { user -> eq 'user', user }
+
+		ofUser { user -> eq 'user', user }
+
 		inCategory { category -> eq 'category', category }
-		recent { days, user -> 
+
+		recent { days, user ->
 			gt 'dueDate', LocalDate.now(user.timeZone()).atStartOfDay().minusDays(days)
-		}		
+		}
+	}
+*/		
+	def beforeUpdate() {
+		if (isDirty('status'))
+			statusChangeDate = LocalDate.now(user.timeZone())
 	}
 		
-	def beforeUpdate() {
-/*		if (isDirty('status'))
-			statusChangeDate = new LocalDate(user.timeZone())
-*/	}
-		
-/*	boolean isPastDue() {
+	boolean isPastDue() {
 		(status == TaskStatus.NOT_DONE || status == TaskStatus.NOT_CONFIRMED) && 
-			dueDate < new LocalDate(user.timeZone())
+			dueDate < LocalDate.now(user.timeZone())
 	}
 	
 	boolean isPastDailyTask()	{dailyTask && isPastDue()}
 	boolean isNotConfirmed()	{status == TaskStatus.NOT_CONFIRMED}
-	boolean isDueTodayAndNotDone() {status == TaskStatus.NOT_DONE && dueDate == new LocalDate(user.timeZone())}
+	boolean isDueTodayAndNotDone() {status == TaskStatus.NOT_DONE && dueDate == LocalDate.now(user.timeZone())}
 	boolean isNotDone()			{status == TaskStatus.NOT_DONE}
 	boolean isCompletedLate()	{status == TaskStatus.DONE && statusChangeDate > dueDate}
 	boolean isCompleted()		{status == TaskStatus.DONE}
 	boolean isDailyTaskType()	{dailyTask != null}
-*/	
-	
-//	boolean isRequiresConfirmation()	{dailyTask != null}
 }

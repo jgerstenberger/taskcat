@@ -5,6 +5,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoField;
+import java.time.ZoneId
 
 
 class CaseCategory {
@@ -16,12 +17,15 @@ class CaseCategory {
 class HumanDateTagLib {
 	DateTimeFormatter dt = new DateTimeFormatterBuilder().appendPattern("EEEE").toFormatter()
 	
-	def humanDate = { attrs, body ->
-//		println Days.daysBetween(new LocalDate(), attrs.date);
-		out << daysToString(ChronoUnit.DAYS.between(LocalDate.now(attrs.timeZone).atStartOfDay(), attrs.date).getDays())
+	def java8FormatDate = { attrs, body ->
+		out << g.formatDate(date: Date.from(attrs.date.atStartOfDay(ZoneId.systemDefault()).toInstant()), format: attrs.format)
 	}
 	
-	def daysToString(int days) {
+	def humanDate = { attrs, body ->
+		out << daysToString(ChronoUnit.DAYS.between(LocalDate.now(attrs.timeZone), attrs.date))
+	}
+	
+	def daysToString(long days) {
 		use(CaseCategory) {
 			switch (days) {
 				case {it < -1}: return "${days.abs()} days ago"
@@ -34,6 +38,6 @@ class HumanDateTagLib {
 	}
 	
 	def humanDayOfWeek = { attrs, body ->
-		out << dt.print(LocalDate.now().with(ChronoField.DAY_OF_WEEK, Integer.valueOf(attrs['dayOfWeek'])))
+		out << dt.format(LocalDate.now().with(ChronoField.DAY_OF_WEEK, Integer.valueOf(attrs['dayOfWeek'])))
 	}
 }

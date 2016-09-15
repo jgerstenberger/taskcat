@@ -34,16 +34,23 @@ class TaskController {
 	}
 	
 	def indexDone(int userId) {
-		def user = User.get(userId)
-		render(template: 'index', model: [tasks: Task.completed.recent(3, user).forUser(user).list(),
-			tasksType: 'completedTasks', user: user, dtTrend: dailyTaskTrend(user)])
+		def theUser = User.get(userId)
+		def tasks = Task.where {
+			dueDate > LocalDate.now(theUser.timeZone()).atStartOfDay().minusDays(3) &&
+			user == theUser && status == TaskStatus.DONE
+		}
+
+		render(template: 'index', model: [tasks: tasks,
+			tasksType: 'completedTasks', user: theUser, dtTrend: dailyTaskTrend(theUser)])
 	}
 	
 	def indexCategory(int userId, int categoryId) {
-		def user = User.get(userId)
-		render(template: 'index', model: [user: user, showCompletedGreen: true, dtTrend: dailyTaskTrend(user),
-			tasksType: 'categoryTasks', tasks: Task.forUser(user).inCategory(Category.get(categoryId)).list(
-				[sort: 'dueDate', order: 'desc', max:20])])
+		def theUser = User.get(userId)
+		def tasks = Task.where {
+			user == theUser && category == Category.get(categoryId)
+			}.list([sort: 'dueDate', order: 'desc', max:20])
+		render(template: 'index', model: [user: theUser, showCompletedGreen: true, dtTrend: dailyTaskTrend(theUser),
+			tasksType: 'categoryTasks', tasks: tasks])
 	}	
 	
 	@Secured(['ROLE_ADMIN'])
@@ -66,7 +73,7 @@ class TaskController {
 	def save() {
 		Task task = new Task(params)
 		if (!task.save())
-			log.info("Task ${task.properties} not saved because of:\n${task.errors}")
+			log.error("Task ${task} not saved because of:\n${task.errors}")
 			
 		def referer =  request.getHeader('referer')
 		if (referer)
@@ -89,7 +96,7 @@ class TaskController {
 		User user = task.user
 		
 		if (task.category) {
-			def tasks = Task.forUser(user).inCategory(task.category).findAllByDueDateGreaterThanEquals(task.dueDate)
+			def tasks = Task.ofUser(user).inCategory(task.category).findAllByDueDateGreaterThanEquals(task.dueDate)
 			tasks.each {
 				it.dueDate = it.dueDate.plusDays(1)
 				it.save()
@@ -128,8 +135,8 @@ class TaskController {
 	}
 	
 	def recentForCategory(int userId, int categoryId) {
-		def tasks = Task.inCategory(Category.get(categoryId)).forUser(User.get(userId)).
-			list(sort: 'id', order: 'desc', max: 6)
+		def tasks = Task.where { category == Category.get(categoryId && user == User.get(userId))
+			}.list(sort: 'id', order: 'desc', max: 6)
 		
 		render(template:'recentForCategory', model:	[recent: tasks])
 	}

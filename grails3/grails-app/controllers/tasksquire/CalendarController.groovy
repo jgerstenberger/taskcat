@@ -4,6 +4,8 @@ import grails.converters.JSON;
 import grails.plugin.springsecurity.annotation.Secured;
 
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.Instant
 
 @Secured(['ROLE_USER'])
 class CalendarController {
@@ -14,9 +16,12 @@ class CalendarController {
 	}
 
 	def data(int userId, long start, long end) {
-		def tasks = Task.forUser(User.get(userId)).findAllByDueDateBetween(
-			new LocalDate(start * 1000), new LocalDate(end * 1000))
-		
+		def theUser = User.get(userId)		
+		def tasks = Task.findByUser(theUser).findByDueDateBetween(
+			LocalDateTime.ofInstant(Instant.ofEpochSecond(start), user.timeZone()),
+			LocalDateTime.ofInstant(Instant.ofEpochSecond(end), user.timeZone())
+		)
+				
 		def events = tasks.collect {
 			def color = '#888'
 			if (it.isPastDue()) {
@@ -40,8 +45,8 @@ class CalendarController {
 				}
 				description = catName + ':' + description
 			}
-			
-			[title:description, start:it.dueDate, color:color]
+						
+			[title:description, start:it.dueDate.toString(), color:color]
 		}
 		
 		render events as JSON

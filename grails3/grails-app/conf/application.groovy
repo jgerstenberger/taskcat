@@ -34,5 +34,7 @@ grails.plugin.springsecurity.oauth2.domainClass = 'tasksquire.OAuthID'
 
 grails.plugin.springsecurity.oauth2.registration.askToLinkOrCreateAccountUri = '/tasksquireOAuth2/createAccount'
 
+grails.plugin.springsecurity.oauth2.registration.roleNames = ['ROLE_ADMIN']
+
 grails.plugin.springsecurity.auth.loginFormUrl =
 	"/springSecurityOAuth2/authenticate?provider=google"

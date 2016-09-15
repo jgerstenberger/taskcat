@@ -30,8 +30,8 @@
 				</g:if>
 			</td>
 			<td>
-				<div>${humanDate(date: task.dueDate, timeZone: user.timeZone())}</div>
-				<div class="date-fine-print"><g:formatDate date="${task.dueDate.toDate()}" format="EEE (yyyy-MM-dd)"/></div>
+				<div><g:humanDate date="${task.dueDate}" timeZone="${user.timeZone()}"/></div>
+				<div class="date-fine-print"><g:java8FormatDate date="${task.dueDate}" format="EEE (yyyy-MM-dd)"/></div>
 			</td>
 		</tr>
 	</g:each>
@@ -55,7 +55,7 @@
 					${task.description}
 				</span>
 			</div>
-			<div>Due: ${humanDate(date: task.dueDate)}, <g:formatDate date="${task.dueDate.toDate()}" format="EEE (yyyy-MM-dd)"/></div>
+			<div>Due: <g:humanDate date="${task.dueDate}" timeZone="${user.timeZone()}"/>, <g:java8FormatDate date="${task.dueDate}" format="EEE (yyyy-MM-dd)"/></div>
 			<div><g:render template="taskButtons" model="['task':task]"/></div>
 
 		</div>
