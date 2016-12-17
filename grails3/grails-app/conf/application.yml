@@ -135,3 +135,6 @@ grails:
                         api_secret: ${API_SECRET}
                         successUri: "/oauth2/google/success?_spring_security_remember_me=true"
                         scopes: "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email"
+test:
+    authUser: '${GOOGLE_TEST_USER}'
+    authPassword: '${GOOGLE_TEST_PASSWORD}'
