@@ -29,18 +29,23 @@ class FirstFuncTestSpec extends GebSpec {
     void "test something"() {
         when:"The home page is visited"
 			go '/'
-			sleep(2000)
 			$('form').Email = grailsApplication.config.test.authUser
-			sleep(2000)
 			$('#next').click()
-			sleep(2000)
+			waitFor {
+				$("input", name: "Passwd")
+			}
 			$('form').Passwd = grailsApplication.config.test.authPassword
-			sleep(2000)
 			$('#signIn').click()
-			for (int i = 0; i < 50; i++) {
+/*			for (int i = 0; i < 50; i++) {
 				println $('#submit_approve_access').firstElement().isEnabled()
 				sleep(100)
+			}*/
+			waitFor {
+				$('#submit_approve_access').firstElement().isEnabled()
 			}
+			
+			$('#submit_approve_access').click()
+			sleep(2000)
 		
 /*            go '/'
 			report 'auth1'
