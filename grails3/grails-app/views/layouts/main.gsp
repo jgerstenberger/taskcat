@@ -16,7 +16,7 @@
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.9.0/fullcalendar.min.css"/>
 
 		<script>
-			var userId = ${user.id};
+			var userId = ${user?.id};
 		</script>
 		<g:layoutHead/>
 	</head>
