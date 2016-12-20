@@ -14,13 +14,21 @@ import geb.spock.*
 @Rollback
 class FirstFuncTestSpec extends GebSpec {
 	
-	@Value('${local.server.port}')
-	Integer serverPort
-		
 	def grailsApplication
 
     def setup() {
-		grailsApplication.config.grails.serverURL = "http://localhost:${grailsApplication.getMainContext().embeddedServletContainer.port}"
+/*
+		defineBeans {
+			clock(MockClock) {
+				dateTime = "1/1/2001 12:00:00"
+			}
+		}*/
+		
+		def user = new User(username: 'u', password: 'p').save()
+		User.withSession {
+			it.flush()
+			it.clear()
+		}
     }
 
     def cleanup() {
@@ -28,24 +36,30 @@ class FirstFuncTestSpec extends GebSpec {
 	
     void "test something"() {
         when:"The home page is visited"
+			to LoginPage
+			sleep(1000)
+			username = 'u'
+			password = 'p'
+			sleep(1000)
+			loginButton.click()
+			sleep(1000)
+			
+		/*
 			go '/'
+			sleep(200)
 			$('form').Email = grailsApplication.config.test.authUser
+			sleep(200)
 			$('#next').click()
-			waitFor {
-				$("input", name: "Passwd")
-			}
+			sleep(200)
 			$('form').Passwd = grailsApplication.config.test.authPassword
+			sleep(200)
 			$('#signIn').click()
-/*			for (int i = 0; i < 50; i++) {
-				println $('#submit_approve_access').firstElement().isEnabled()
-				sleep(100)
-			}*/
 			waitFor {
 				$('#submit_approve_access').firstElement().isEnabled()
 			}
-			
 			$('#submit_approve_access').click()
-			sleep(2000)
+			sleep(200)
+		*/
 		
 /*            go '/'
 			report 'auth1'
@@ -85,7 +99,7 @@ class FirstFuncTestSpec extends GebSpec {
 /*			println currentUrl*/
 			
         then:"The title is correct"
-        	title == "Sign in - Google Accounts"	
+        	title == "Login"	
 			
 		cleanup:
 			report 'auth'

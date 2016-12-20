@@ -1,51 +1,40 @@
-<!doctype html>
-<html lang="en" class="no-js">
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <title>
-        <g:layoutTitle default="Grails"/>
-    </title>
-    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<base href="${request.contextPath}"/>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<newrelic:browserTimingHeader/>
+		<link rel="apple-touch-icon-precomposed" href="${resource(file: 'apple-touch-icon.png')}" />
+		<title><g:layoutTitle default="TaskSquire"/></title>
 
-    <asset:stylesheet src="application.css"/>
+		<!-- <r:require modules="bootstrap"/>
+		<r:require module="taskCreate"/>
+		<r:layoutResources/> -->
 
-    <g:layoutHead/>
-</head>
-<body>
+	    <asset:stylesheet src="application.css"/>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/css/bootstrap-datepicker3.min.css"/>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.9.0/fullcalendar.min.css"/>
 
-    <div class="navbar navbar-default navbar-static-top" role="navigation">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a class="navbar-brand" href="/#">
-                    <i class="fa grails-icon">
-                        <asset:image src="grails-cupsonly-logo-white.svg"/>
-                    </i> Grails
-                </a>
-            </div>
-            <div class="navbar-collapse collapse" aria-expanded="false" style="height: 0.8px;">
-                <ul class="nav navbar-nav navbar-right">
-                    <g:pageProperty name="page.nav" />
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <g:layoutBody/>
-
-    <div class="footer" role="contentinfo"></div>
-
-    <div id="spinner" class="spinner" style="display:none;">
-        <g:message code="spinner.alt" default="Loading&hellip;"/>
-    </div>
-
-    <asset:javascript src="application.js"/>
-
-</body>
+		<script>
+			var userId = ${user?.id};
+		</script>
+		<g:layoutHead/>
+	</head>
+	<body>
+		<g:include controller="main" action="taskbar"/>
+		<div class="container">
+			<sec:ifAnyGranted roles="ROLE_ADMIN">
+				<g:include controller="task" action="create" />
+				<g:include controller="dailyTask" action="create" />
+			</sec:ifAnyGranted>
+			<g:layoutBody/>
+		</div>
+		<!-- <r:layoutResources/> -->
+	    <asset:javascript src="application.js"/>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-sparklines/2.1.2/jquery.sparkline.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.14.1/moment.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.9.0/fullcalendar.min.js"></script>
+		<newrelic:browserTimingFooter/>
+	</body>
 </html>
